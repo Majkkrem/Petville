@@ -4,61 +4,101 @@ import Animals.Cat;
 import Animals.Dog;
 import Animals.Rabbit;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
 
 public class MainMenu {
+  private JFrame frame;
+  private JTextField playerNameField;
+  private JTextField petNameField;
+  private JComboBox<String> animalSelector;
+
   public MainMenu() {
     createAndShowGUI();
   }
 
   private void createAndShowGUI() {
-    JFrame frame = new JFrame("Main Menu");
+    frame = new JFrame("Main Menu");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(300, 200);
+    frame.setSize(800, 600);
+    frame.setLocationRelativeTo(null);
+    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    frame.setResizable(true);
 
     JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    JLabel playerNameLabel = new JLabel("Ad your name:");
+    playerNameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+    playerNameField = new JTextField();
+    playerNameField.setPreferredSize(new Dimension(300, 40));
+    playerNameField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    JLabel petNameLabel = new JLabel("Name your pet:");
+    petNameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+    petNameField = new JTextField();
+    petNameField.setPreferredSize(new Dimension(300, 40));
+    petNameField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    JLabel label = new JLabel("Choose your pet:", SwingConstants.CENTER);
+    label.setFont(new Font("Arial", Font.PLAIN, 16));
+    String[] animals = {"Dog", "Cat", "Bird", "Rabbit"};
+    animalSelector = new JComboBox<>(animals);
+    animalSelector.setPreferredSize(new Dimension(300, 40));
+    animalSelector.setAlignmentX(Component.CENTER_ALIGNMENT);
+
     JButton startButton = new JButton("Start Game");
+    startButton.setFont(new Font("Arial", Font.BOLD, 16));
+    startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    startButton.addActionListener(e -> startGame());
 
-    startButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        new GameWindow(new Animal(100, 100, 100, 100, 100));
-        frame.dispose();
-      }
-    });
-
+    panel.add(Box.createRigidArea(new Dimension(0, 40)));
+    panel.add(playerNameLabel);
+    panel.add(playerNameField);
+    panel.add(Box.createRigidArea(new Dimension(0, 20)));
+    panel.add(petNameLabel);
+    panel.add(petNameField);
+    panel.add(Box.createRigidArea(new Dimension(0, 20)));
+    panel.add(label);
+    panel.add(animalSelector);
+    panel.add(Box.createRigidArea(new Dimension(0, 20)));
     panel.add(startButton);
+
     frame.add(panel);
     frame.setVisible(true);
   }
 
-  private Scanner scanner = new Scanner(System.in);
+  private void startGame() {
+    String playerName = playerNameField.getText().trim();
+    String petName = petNameField.getText().trim();
 
-  public Animal startMenu() {
-    System.out.println("Üdv a Tamagotchi játékban!");
-    System.out.print("Add meg a neved: ");
-    String playerName = scanner.nextLine();
-
-    System.out.println("Válassz állatot: 1) Kutya 2) Macska 3) Madár 4) Nyúl");
-    int choice = scanner.nextInt();
-    scanner.nextLine();
-
-    System.out.print("Nevezd el az állatod: ");
-    String petName = scanner.nextLine();
-
-    switch (choice) {
-      case 1: return new Dog(petName);
-      case 2: return new Cat(petName);
-      case 3: return new Bird(petName);
-      case 4: return new Rabbit(petName);
-      default:
-        System.out.println("Érvénytelen választás. Alapértelmezettként kutyát kapsz.");
-        return new Dog(petName);
+    if (playerName.isEmpty() || petName.isEmpty()) {
+      JOptionPane.showMessageDialog(frame, "Please give me your name and name your pet!", "Error", JOptionPane.ERROR_MESSAGE);
+      return;
     }
+
+    String selectedAnimal = (String) animalSelector.getSelectedItem();
+    Animal chosenAnimal;
+
+    switch (selectedAnimal) {
+      case "Dog":
+        chosenAnimal = new Dog(petName);
+        break;
+      case "Cat":
+        chosenAnimal = new Cat(petName);
+        break;
+      case "Bird":
+        chosenAnimal = new Bird(petName);
+        break;
+      case "Rabbit":
+        chosenAnimal = new Rabbit(petName);
+        break;
+      default:
+        chosenAnimal = new Dog(petName);
+    }
+
+    frame.dispose();
+    new GameWindow(chosenAnimal);
   }
 }
