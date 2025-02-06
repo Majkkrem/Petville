@@ -1,3 +1,5 @@
+package Animals;
+
 public class Animal {
   private int energy;
   private int food;

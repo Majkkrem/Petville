@@ -1,3 +1,5 @@
+import Animals.Animal;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,7 +14,7 @@ public class GameWindow {
   }
 
   private void createAndShowGUI() {
-    JFrame frame = new JFrame("Animal Stats");
+    JFrame frame = new JFrame("Animals.Animal Stats");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(300, 200);
 
