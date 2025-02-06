@@ -1,6 +1,6 @@
 package Animals;
 
-class Bird extends Animal {
+public class Bird extends Animal {
   public Bird(String petName) {
     super(100, 100, 100, 100, 100);
   }

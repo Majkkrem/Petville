@@ -1,4 +1,5 @@
 import Animals.Animal;
+import Animals.Bird;
 import Animals.Cat;
 import Animals.Dog;
 import Animals.Rabbit;
