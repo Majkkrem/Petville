@@ -1,9 +1,9 @@
-import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Scanner;
 
 public class MainMenu {
   public MainMenu() {
@@ -22,7 +22,7 @@ public class MainMenu {
       @Override
       public void actionPerformed(ActionEvent e) {
         new GameWindow(new Animal(100, 100, 100, 100, 100));
-        frame.dispose(); // Close the main menu window
+        frame.dispose();
       }
     });
 
@@ -30,7 +30,8 @@ public class MainMenu {
     frame.add(panel);
     frame.setVisible(true);
   }
-  /*private Scanner scanner = new Scanner(System.in);
+
+  private Scanner scanner = new Scanner(System.in);
 
   public Animal startMenu() {
     System.out.println("Üdv a Tamagotchi játékban!");
@@ -52,7 +53,6 @@ public class MainMenu {
       default:
         System.out.println("Érvénytelen választás. Alapértelmezettként kutyát kapsz.");
         return new Dog(petName);
-    }*/
+    }
   }
 }
-
