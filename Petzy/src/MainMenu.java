@@ -1,3 +1,9 @@
+import Animals.Animal;
+import Animals.Bird;
+import Animals.Cat;
+import Animals.Dog;
+import Animals.Rabbit;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
