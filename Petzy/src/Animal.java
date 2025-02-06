@@ -19,7 +19,6 @@ public class Animal {
 
   public void setEnergy(int energy) {
     this.energy = energy;
-    energy = 100;
   }
 
   public int getFood() {
@@ -28,7 +27,6 @@ public class Animal {
 
   public void setFood(int food) {
     this.food = food;
-    food = 100;
   }
 
   public int getWater() {
@@ -37,7 +35,6 @@ public class Animal {
 
   public void setWater(int water) {
     this.water = water;
-    water = 100;
   }
 
   public int getHealth() {
@@ -46,7 +43,6 @@ public class Animal {
 
   public void setHealth(int health) {
     this.health = health;
-    health = 100;
   }
 
   public int getMood() {
@@ -55,6 +51,6 @@ public class Animal {
 
   public void setMood(int mood) {
     this.mood = mood;
-    mood = 100;
   }
 }
+
