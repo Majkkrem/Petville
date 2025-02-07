@@ -3,7 +3,8 @@ import Animals.Animal;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.GridLayout;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 
 public class GameWindow {
   private Animal animal;
@@ -14,28 +15,33 @@ public class GameWindow {
   }
 
   private void createAndShowGUI() {
-    JFrame frame = new JFrame("Animals.Animal Stats");
+    JFrame frame = new JFrame("Animal Stats");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(300, 200);
+    frame.setSize(900, 600);
 
-    JPanel panel = new JPanel(new GridLayout(5, 2));
+    JPanel panel = new JPanel(new GridLayout(1, 5));
 
-    panel.add(new JLabel("Energy:"));
-    panel.add(new JLabel(String.valueOf(animal.getEnergy())));
+    JLabel energyLabel = new JLabel("Energy: " + animal.getEnergy());
+    energyLabel.setBorder(new LineBorder(Color.BLACK, 1, true));
+    panel.add(energyLabel);
 
-    panel.add(new JLabel("Food:"));
-    panel.add(new JLabel(String.valueOf(animal.getFood())));
+    JLabel foodLabel = new JLabel("Food: " + animal.getFood());
+    foodLabel.setBorder(new LineBorder(Color.BLACK, 1, true));
+    panel.add(foodLabel);
 
-    panel.add(new JLabel("Water:"));
-    panel.add(new JLabel(String.valueOf(animal.getWater())));
+    JLabel waterLabel = new JLabel("Water: " + animal.getWater());
+    waterLabel.setBorder(new LineBorder(Color.BLACK, 1, true));
+    panel.add(waterLabel);
 
-    panel.add(new JLabel("Health:"));
-    panel.add(new JLabel(String.valueOf(animal.getHealth())));
+    JLabel healthLabel = new JLabel("Health: " + animal.getHealth());
+    healthLabel.setBorder(new LineBorder(Color.BLACK, 1, true));
+    panel.add(healthLabel);
 
-    panel.add(new JLabel("Mood:"));
-    panel.add(new JLabel(String.valueOf(animal.getMood())));
+    JLabel moodLabel = new JLabel("Mood: " + animal.getMood());
+    moodLabel.setBorder(new LineBorder(Color.BLACK, 1, true));
+    panel.add(moodLabel);
 
-    frame.add(panel);
+    frame.add(panel, BorderLayout.NORTH);
     frame.setVisible(true);
   }
 }
