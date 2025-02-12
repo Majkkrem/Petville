@@ -23,47 +23,53 @@ public class MainMenu {
     frame.setSize(800, 600);
     frame.setLocationRelativeTo(null);
     frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-    frame.setResizable(true);
+    frame.setResizable(false);
 
-    JPanel panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-    panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    JPanel panel = new JPanel(new GridBagLayout());
+    panel.setBackground(Color.LIGHT_GRAY);
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.anchor = GridBagConstraints.CENTER;
 
-    JLabel playerNameLabel = new JLabel("Ad your name:");
-    playerNameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-    playerNameField = new JTextField();
-    playerNameField.setPreferredSize(new Dimension(300, 40));
-    playerNameField.setAlignmentX(Component.CENTER_ALIGNMENT);
+    JLabel playerNameLabel = new JLabel("Add your name:", SwingConstants.CENTER);
+    playerNameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    panel.add(playerNameLabel, gbc);
 
-    JLabel petNameLabel = new JLabel("Name your pet:");
-    petNameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-    petNameField = new JTextField();
-    petNameField.setPreferredSize(new Dimension(300, 40));
-    petNameField.setAlignmentX(Component.CENTER_ALIGNMENT);
+    playerNameField = new JTextField(15);
+    playerNameField.setFont(new Font("Arial", Font.PLAIN, 16));
+    gbc.gridy = 1;
+    panel.add(playerNameField, gbc);
+
+    JLabel petNameLabel = new JLabel("Name your pet:", SwingConstants.CENTER);
+    petNameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+    gbc.gridy = 2;
+    panel.add(petNameLabel, gbc);
+
+    petNameField = new JTextField(15);
+    petNameField.setFont(new Font("Arial", Font.PLAIN, 16));
+    gbc.gridy = 3;
+    panel.add(petNameField, gbc);
 
     JLabel label = new JLabel("Choose your pet:", SwingConstants.CENTER);
-    label.setFont(new Font("Arial", Font.PLAIN, 16));
-    String[] animals = {"Dog", "Cat", "Bird", "Rabbit"};
+    label.setFont(new Font("Arial", Font.BOLD, 18));
+    gbc.gridy = 4;
+    panel.add(label, gbc);
+
+    String[] animals = {"Dog", "Cat", "Bird", "Rabbit"}; //TODO átrakani adatbázisba
     animalSelector = new JComboBox<>(animals);
-    animalSelector.setPreferredSize(new Dimension(300, 40));
-    animalSelector.setAlignmentX(Component.CENTER_ALIGNMENT);
+    animalSelector.setFont(new Font("Arial", Font.PLAIN, 16));
+    gbc.gridy = 5;
+    panel.add(animalSelector, gbc);
 
     JButton startButton = new JButton("Start Game");
-    startButton.setFont(new Font("Arial", Font.BOLD, 16));
-    startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-    startButton.addActionListener(e -> startGame());
+    startButton.setFont(new Font("Arial", Font.BOLD, 18));
+    gbc.gridy = 6;
+    panel.add(startButton, gbc);
 
-    panel.add(Box.createRigidArea(new Dimension(0, 40)));
-    panel.add(playerNameLabel);
-    panel.add(playerNameField);
-    panel.add(Box.createRigidArea(new Dimension(0, 20)));
-    panel.add(petNameLabel);
-    panel.add(petNameField);
-    panel.add(Box.createRigidArea(new Dimension(0, 20)));
-    panel.add(label);
-    panel.add(animalSelector);
-    panel.add(Box.createRigidArea(new Dimension(0, 20)));
-    panel.add(startButton);
+    startButton.addActionListener(e -> startGame());
 
     frame.add(panel);
     frame.setVisible(true);
