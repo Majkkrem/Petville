@@ -58,7 +58,7 @@ public class MainMenu {
     gbc.gridy = 4;
     panel.add(label, gbc);
 
-    String[] animals = {"Dog", "Cat", "Bird", "Rabbit"}; //TODO átrakani adatbázisba
+    String[] animals = {"Dog", "Cat", "Bird", "Rabbit"};
     animalSelector = new JComboBox<>(animals);
     animalSelector.setFont(new Font("Arial", Font.PLAIN, 16));
     gbc.gridy = 5;

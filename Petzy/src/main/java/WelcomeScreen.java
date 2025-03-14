@@ -15,7 +15,7 @@ public class WelcomeScreen {
   }
 
   private void createAndShowGUI() {
-    frame = new JFrame("Petzy The Game");
+    frame = new JFrame("Petville");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(400, 300);
     frame.setResizable(false);
@@ -24,7 +24,7 @@ public class WelcomeScreen {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
 
-    JLabel titleLabel = new JLabel("Petzy The Game", SwingConstants.CENTER);
+    JLabel titleLabel = new JLabel("Petville", SwingConstants.CENTER);
     titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
     progressBar = new JProgressBar(0, 100);
