@@ -13,26 +13,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users{
-  id    Int @id @default(autoincrement())
-  name  String
-  email String
-  password String
+model Users {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  email       String
+  password    String
   Leaderboard Leaderboard[]
-  Save_files Save_files[]
+  Save_files  Save_files[]
+  role        Role          @default(USER)
 }
 
-model Leaderboard{
-  id    Int @id @default(autoincrement())
+model Leaderboard {
+  id      Int   @id @default(autoincrement())
   user_id Int
-  score Int
-  user Users @relation(fields: [user_id], references: [id])
+  score   Int
+  user    Users @relation(fields: [user_id], references: [id])
 }
 
-model Save_files{
-  id    Int @id @default(autoincrement())
-  user_id Int
-  file_name String
-  file_path String
-  user Users @relation(fields: [user_id], references: [id])
+model Save_files {
+  id          Int    @id @default(autoincrement())
+  user_id     Int
+  petName     String
+  petType     String
+  petEnergy   Int
+  petHunger   Int
+  petMood     Int
+  petHealth   Int
+  hoursPlayer Int
+  goldEarned  Int
+  currentGold Int
+  user        Users  @relation(fields: [user_id], references: [id])
+}
+
+enum Role {
+  ADMIN
+  USER
 }
