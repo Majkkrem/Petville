@@ -1,5 +1,12 @@
 export class CreateSaveFileDto {
     user_id: number;
-    file_name: string;
-    file_path: string;
+    petName: string;
+    petType: string;
+    petEnergy: number ;
+    petHunger: number;
+    petMood: number;
+    petHealth: number;
+    hoursPlayer: number;
+    goldEarned: number;
+    currentGold: number;
 }

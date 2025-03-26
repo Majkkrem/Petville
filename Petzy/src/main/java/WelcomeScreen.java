@@ -3,63 +3,52 @@ import java.awt.*;
 
 public class WelcomeScreen {
   private JFrame frame;
-  private JProgressBar progressBar;
-  private JLabel loadingLabel;
-  private int progress = 0;
-  private boolean isVisible = true;
+  private String fontName;
 
   public WelcomeScreen() {
+    CustomFont cf = new CustomFont();
+    fontName = cf.getFont().getName();
     createAndShowGUI();
-    startLoading();
-    startBlinking();
   }
 
   private void createAndShowGUI() {
-    frame = new JFrame("Petville");
+    frame = new JFrame("Welcome to Petville");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(400, 300);
-    frame.setResizable(false);
+    frame.setSize(800, 600);
     frame.setLocationRelativeTo(null);
+    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    frame.setResizable(false);
 
-    JPanel panel = new JPanel();
-    panel.setLayout(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
+    JLabel backgroundLabel = new JLabel(new ImageIcon("path/to/welcome_background.jpg"));
+    backgroundLabel.setLayout(new GridBagLayout());
 
-    JLabel titleLabel = new JLabel("Petville", SwingConstants.CENTER);
-    titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.insets = new Insets(10, 10, 10, 10);
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.CENTER;
 
-    progressBar = new JProgressBar(0, 100);
-    progressBar.setStringPainted(true);
+    JLabel titleLabel = new JLabel("Welcome to Petville", SwingConstants.CENTER);
+    titleLabel.setFont(new Font(fontName, Font.BOLD, 48));
+    titleLabel.setForeground(Color.BLACK);
+    backgroundLabel.add(titleLabel, gbc);
 
-    loadingLabel = new JLabel("Loading...", SwingConstants.CENTER);
-    loadingLabel.setFont(new Font("Arial", Font.BOLD, 18));
+    gbc.gridy = 1;
+    JButton startButton = new JButton("Start");
+    startButton.setFont(new Font(fontName, Font.BOLD, 24));
+    startButton.setContentAreaFilled(false);
+    startButton.setBorderPainted(false);
+    startButton.setFocusPainted(false);
+    startButton.setForeground(Color.BLACK);
+    startButton.addActionListener(e -> {
+      frame.dispose();
+      new MainMenu();
+    });
+    backgroundLabel.add(startButton, gbc);
 
-    panel.add(titleLabel, BorderLayout.NORTH);
-    panel.add(loadingLabel, BorderLayout.CENTER);
-    panel.add(progressBar, BorderLayout.SOUTH);
-
+    panel.add(backgroundLabel, BorderLayout.CENTER);
     frame.add(panel);
     frame.setVisible(true);
-  }
-
-  private void startLoading() {
-    Timer timer = new Timer(50, e -> {
-      progress += 2;
-      progressBar.setValue(progress);
-
-      if (progress >= 100) {
-        ((Timer) e.getSource()).stop();
-        frame.dispose();
-        new MainMenu();
-      }
-    });
-    timer.start();
-  }
-
-  private void startBlinking() {
-    Timer blinkTimer = new Timer(500, e -> {
-      isVisible = !isVisible;
-      loadingLabel.setVisible(isVisible);
-    });
-    blinkTimer.start();
   }
 }

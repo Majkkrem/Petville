@@ -38,7 +38,6 @@ public class ImageRescaler {
 
       int scaledWidth = (int) (image.getWidth(null) * scale);
       int scaledHeight = (int) (image.getHeight(null) * scale);
-      System.out.println("rescale :)");
       Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
       backgroundLabel.setIcon(new ImageIcon(scaledImage));
       backgroundLabel.setHorizontalAlignment(JLabel.CENTER); // Center the image

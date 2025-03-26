@@ -8,8 +8,21 @@ export class SaveFilesService {
   constructor(private prisma: PrismaService) {}
 
   create(createSaveFileDto: CreateSaveFileDto) {
-    return this.prisma.save_files.create({ data: createSaveFileDto });
-  }
+    return this.prisma.save_files.create({
+        data: {
+            petName: createSaveFileDto.petName,
+            petType: createSaveFileDto.petType,
+            petEnergy: createSaveFileDto.petEnergy,
+            petHunger: createSaveFileDto.petHunger,
+            petMood: createSaveFileDto.petMood,
+            petHealth: createSaveFileDto.petHealth,
+            hoursPlayer: createSaveFileDto.hoursPlayer,
+            goldEarned: createSaveFileDto.goldEarned,
+            currentGold: createSaveFileDto.currentGold,
+            user: { connect: { id: createSaveFileDto.user_id } }
+        }
+    });
+}
 
   findAll() {
     return this.prisma.save_files.findMany();

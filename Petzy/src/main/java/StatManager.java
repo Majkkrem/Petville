@@ -17,6 +17,6 @@ public class StatManager {
         animal.reduceStatsOverTime();
         // Logic to update the UI
       }
-    }, 0, 2000);
+    }, 0, 500);
   }
 }
