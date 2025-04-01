@@ -1,0 +1,51 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 5px solid #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .pet-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .pet-card:hover {
+    transform: scale(1.03);
+  }
+  
+  .pet-img {
+    height: 120px;
+    object-fit: contain;
+  }
+  
+  .side-border-left, .side-border-right {
+    background-color: #343a40;
+  }
+  
+  @media (max-width: 768px) {
+    .side-border-left, .side-border-right {
+      display: none;
+    }
+    
+    .main-content {
+      padding: 0 15px;
+    }
+  }
