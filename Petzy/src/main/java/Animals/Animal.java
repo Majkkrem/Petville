@@ -1,13 +1,13 @@
 package Animals;
 
 public class Animal {
-  private String name;
-  private int energy;
-  private int food;
-  private int water;
-  private int health;
-  private int mood;
-  private boolean isSleeping;
+    private String name;
+    private int energy;
+    private int food;
+    private int water;
+    private int health;
+    private int mood;
+    private boolean isSleeping;
 
   public Animal(String name, int energy, int food, int water, int health, int mood) {
     this.name = name;

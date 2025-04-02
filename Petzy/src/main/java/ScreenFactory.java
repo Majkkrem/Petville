@@ -10,35 +10,34 @@ import java.util.TimerTask;
 public class ScreenFactory {
   private JFrame frame;
   private Animal animal;
-  private ImageRescaler imageRescaler;
-  private Timer sleepTimer;
-  private int coins = 100; // Player's coins
+  private int coins = 100;
   private Map<String, Integer> inventory = new HashMap<>();
+  private Timer sleepTimer;
 
   public ScreenFactory(JFrame frame, Animal animal) {
     this.frame = frame;
     this.animal = animal;
-    this.imageRescaler = new ImageRescaler(frame);
   }
 
   public JPanel createMainScreen() {
+    ImageRescaler rescaler = new ImageRescaler(frame); // New instance for this screen
     JPanel mainScreen = new JPanel(new BorderLayout());
 
     // Load the background image
-    ImageIcon backgroundIcon = new ImageIcon("images/dog.jpg");
-    imageRescaler.setImage(backgroundIcon.getImage());
+    ImageIcon backgroundIcon = new ImageIcon("images/Kitchen.png");
+    rescaler.setImage(backgroundIcon.getImage());
 
     // Create the background label
     JLabel backgroundLabel = new JLabel();
-    backgroundLabel.setLayout(new BorderLayout()); // Use BorderLayout to center the image
-    backgroundLabel.setHorizontalAlignment(JLabel.CENTER); // Center the image horizontally
-    backgroundLabel.setVerticalAlignment(JLabel.CENTER);   // Center the image vertically
+    backgroundLabel.setLayout(new BorderLayout());
+    backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
+    backgroundLabel.setVerticalAlignment(JLabel.CENTER);
 
     // Set up the rescale listener
-    imageRescaler.setBackgroundLabel(backgroundLabel);
-    imageRescaler.setupRescaleListener();
+    rescaler.setBackgroundLabel(backgroundLabel);
+    rescaler.setupRescaleListener();
 
-    // Create the overlay panel for stats and buttons
+    // Create the overlay panel
     JPanel overlayPanel = new JPanel(new BorderLayout());
     overlayPanel.setOpaque(false);
 
@@ -48,41 +47,37 @@ public class ScreenFactory {
     overlayPanel.add(statsPanel, BorderLayout.NORTH);
     overlayPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-    // Add the overlay panel to the background label
     backgroundLabel.add(overlayPanel);
-
-    // Add the background label to the main screen
     mainScreen.add(backgroundLabel, BorderLayout.CENTER);
 
     return mainScreen;
   }
 
-
   public JPanel createKitchenScreen() {
+    ImageRescaler rescaler = new ImageRescaler(frame); // New instance for this screen
     JPanel kitchenScreen = new JPanel(new BorderLayout());
 
     // Load the background image
     ImageIcon backgroundIcon = new ImageIcon("images/Kitchen.png");
-    imageRescaler.setImage(backgroundIcon.getImage());
+    rescaler.setImage(backgroundIcon.getImage());
 
     // Create the background label
     JLabel backgroundLabel = new JLabel();
-    backgroundLabel.setLayout(new BorderLayout()); // Use BorderLayout to center the image
-    backgroundLabel.setHorizontalAlignment(JLabel.CENTER); // Center the image horizontally
-    backgroundLabel.setVerticalAlignment(JLabel.CENTER);   // Center the image vertically
+    backgroundLabel.setLayout(new BorderLayout());
+    backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
+    backgroundLabel.setVerticalAlignment(JLabel.CENTER);
 
     // Set up the rescale listener
-    imageRescaler.setBackgroundLabel(backgroundLabel);
-    imageRescaler.setupRescaleListener();
+    rescaler.setBackgroundLabel(backgroundLabel);
+    rescaler.setupRescaleListener();
 
-    // Create the overlay panel for kitchen-specific content
+    // Create the overlay panel
     JPanel overlayPanel = new JPanel(new BorderLayout());
     overlayPanel.setOpaque(false);
 
     JLabel kitchenLabel = new JLabel("Kitchen", SwingConstants.CENTER);
     kitchenLabel.setForeground(Color.WHITE);
 
-//    // Add Fridge and Inventory icons
     JPanel iconPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     ImageIcon fridgeIcon = new ImageIcon("path/to/fridge_icon.png");
     ImageIcon inventoryIcon = new ImageIcon("path/to/inventory_icon.png");
@@ -97,35 +92,31 @@ public class ScreenFactory {
     iconPanel.add(inventoryButton);
 
     overlayPanel.add(iconPanel, BorderLayout.NORTH);
-
-    // Add the overlay panel to the background label
     backgroundLabel.add(overlayPanel);
-
-    // Add the background label to the kitchen screen
     kitchenScreen.add(backgroundLabel, BorderLayout.CENTER);
 
     return kitchenScreen;
-
   }
 
   public JPanel createBedRoomScreen() {
+    ImageRescaler rescaler = new ImageRescaler(frame); // New instance for this screen
     JPanel bedroomScreen = new JPanel(new BorderLayout());
 
     // Load the background image
     ImageIcon backgroundIcon = new ImageIcon("images/bedroom_bed_style_39274_1920x1080.jpg");
-    imageRescaler.setImage(backgroundIcon.getImage());
+    rescaler.setImage(backgroundIcon.getImage());
 
     // Create the background label
     JLabel backgroundLabel = new JLabel();
-    backgroundLabel.setLayout(new BorderLayout()); // Use BorderLayout to center the image
-    backgroundLabel.setHorizontalAlignment(JLabel.CENTER); // Center the image horizontally
-    backgroundLabel.setVerticalAlignment(JLabel.CENTER);   // Center the image vertically
+    backgroundLabel.setLayout(new BorderLayout());
+    backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
+    backgroundLabel.setVerticalAlignment(JLabel.CENTER);
 
     // Set up the rescale listener
-    imageRescaler.setBackgroundLabel(backgroundLabel);
-    imageRescaler.setupRescaleListener();
+    rescaler.setBackgroundLabel(backgroundLabel);
+    rescaler.setupRescaleListener();
 
-    // Create the overlay panel for bedroom-specific content
+    // Create the overlay panel
     JPanel overlayPanel = new JPanel(new BorderLayout());
     overlayPanel.setOpaque(false);
 
@@ -139,10 +130,7 @@ public class ScreenFactory {
     overlayPanel.add(statsPanel, BorderLayout.NORTH);
     overlayPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-    // Add the overlay panel to the background label
     backgroundLabel.add(overlayPanel);
-
-    // Add the background label to the bedroom screen
     bedroomScreen.add(backgroundLabel, BorderLayout.CENTER);
 
     return bedroomScreen;

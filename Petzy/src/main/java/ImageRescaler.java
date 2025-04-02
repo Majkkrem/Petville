@@ -40,8 +40,8 @@ public class ImageRescaler {
       int scaledHeight = (int) (image.getHeight(null) * scale);
       Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
       backgroundLabel.setIcon(new ImageIcon(scaledImage));
-      backgroundLabel.setHorizontalAlignment(JLabel.CENTER); // Center the image
-      backgroundLabel.setVerticalAlignment(JLabel.CENTER);   // Center the image
+      backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
+      backgroundLabel.setVerticalAlignment(JLabel.CENTER);
     }
   }
 }
