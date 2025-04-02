@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class MainMenu {
+public class MainMenu { 
   private JFrame frame;
   private JTextField playerNameField;
   private JPasswordField passwordField;

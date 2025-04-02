@@ -16,6 +16,7 @@ public class StatManager {
       public void run() {
         animal.reduceStatsOverTime();
         // Logic to update the UI
+        Animal updatedAnimal = animal;
       }
     }, 0, 500);
   }
