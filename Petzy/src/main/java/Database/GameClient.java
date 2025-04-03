@@ -58,6 +58,7 @@ public class GameClient {
       json.put("goldEarned", 0);
       json.put("currentGold", 0);
 
+
       HttpRequest request = HttpRequest.newBuilder()
           .uri(new URI(BASE_URL + "/save-files"))
           .header("Content-Type", "application/json")
