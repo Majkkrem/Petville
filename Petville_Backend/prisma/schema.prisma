@@ -18,6 +18,7 @@ model Users {
   name        String        @unique
   email       String
   password    String
+  dateOfRegister DateTime @default(now())
   Leaderboard Leaderboard[]
   Save_files  Save_files[]
   role        Role          @default(USER)
