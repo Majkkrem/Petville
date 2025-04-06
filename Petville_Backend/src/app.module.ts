@@ -7,13 +7,15 @@ import { SaveFilesModule } from './save_files/save_files.module';
 import { PrismaService } from './prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { InventoriesModule } from './inventories/inventories.module';
 
 @Module({
 
   imports: [UsersModule, LeaderboardModule, SaveFilesModule, AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
-    })
+    }),
+    InventoriesModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

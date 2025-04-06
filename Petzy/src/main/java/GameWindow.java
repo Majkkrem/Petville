@@ -1,3 +1,4 @@
+// GameWindow.java
 import Animals.Animal;
 import Database.GameClient;
 import javax.swing.*;
@@ -9,40 +10,36 @@ import java.util.TimerTask;
 
 public class GameWindow {
   private JFrame frame;
-  private CardLayout cardLayout;
-  private JPanel cardPanel;
   private Animal animal;
-  private JMenuBar menuBar;
   private Timer gameTimer;
   private ScreenFactory screenFactory;
 
   public GameWindow(Animal animal) {
     this.animal = animal;
-    this.frame = new JFrame("Petville - " + GameClient.getCurrentUser());
-    this.screenFactory = new ScreenFactory(frame, animal);
-    createAndShowGUI();
-    setupAutoSave();
-    createMenuBar();
-    startGameTimer();
+    initialize();
   }
 
-  private void createAndShowGUI() {
+  private void initialize() {
+    frame = new JFrame("Petville - " + GameClient.getCurrentUser());
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(800, 600);
-    frame.setLocationRelativeTo(null);
     frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
     frame.setResizable(false);
 
-    cardLayout = new CardLayout();
-    cardPanel = new JPanel(cardLayout);
+    CardLayout cardLayout = new CardLayout();
+    JPanel cardPanel = new JPanel(cardLayout);
 
-    cardPanel.add(screenFactory.createMainScreen(), "MainScreen");
-    cardPanel.add(screenFactory.createBedRoomScreen(), "BedRoomScreen");
-    cardPanel.add(screenFactory.createKitchenScreen(), "KitchenScreen");
+    screenFactory = new ScreenFactory(frame, animal, cardPanel, cardLayout);
 
-    JPanel navigationPanel = createNavigationPanel();
+    cardPanel.add(screenFactory.createMainScreen(), "Main");
+    cardPanel.add(screenFactory.createKitchenScreen(), "Kitchen");
+    cardPanel.add(screenFactory.createBedRoomScreen(), "Bedroom");
+
     frame.add(cardPanel, BorderLayout.CENTER);
-    frame.add(navigationPanel, BorderLayout.SOUTH);
+    frame.add(createNavigationPanel(cardPanel, cardLayout), BorderLayout.SOUTH);
+    frame.setJMenuBar(createMenuBar());
+
+    setupAutoSave();
+    startGameTimer();
     frame.setVisible(true);
   }
 
@@ -56,7 +53,7 @@ public class GameWindow {
       @Override
       public void run() {
         animal.reduceStatsOverTime();
-        screenFactory.updateStats();
+        screenFactory.updateAllScreens();
 
         if (!animal.isAlive()) {
           stopGameTimer();
@@ -79,64 +76,60 @@ public class GameWindow {
     }
   }
 
-  private void setupAutoSave() {
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        boolean saved = GameClient.saveGameData(animal);
-        if (saved) {
-          System.out.println("Game data saved successfully");
-        } else {
-          System.out.println("Failed to save game data");
-        }
-        GameClient.logout();
-        stopGameTimer();
-      }
-    });
-  }
-
-  private void createMenuBar() {
-    menuBar = new JMenuBar();
+  private JMenuBar createMenuBar() {
+    JMenuBar menuBar = new JMenuBar();
 
     JMenu gameMenu = new JMenu("Game");
-    JMenuItem saveItem = new JMenuItem("Save Game");
+    JMenuItem saveItem = new JMenuItem("Save");
     JMenuItem exitItem = new JMenuItem("Exit");
 
-    saveItem.addActionListener(e -> {
-      boolean saved = GameClient.saveGameData(animal);
-      if (saved) {
-        JOptionPane.showMessageDialog(frame, "Game saved successfully!");
-      } else {
-        JOptionPane.showMessageDialog(frame, "Failed to save game!", "Error", JOptionPane.ERROR_MESSAGE);
-      }
-    });
-
-    exitItem.addActionListener(e -> {
-      frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-    });
+    saveItem.addActionListener(e -> saveGame());
+    exitItem.addActionListener(e -> exitGame());
 
     gameMenu.add(saveItem);
     gameMenu.addSeparator();
     gameMenu.add(exitItem);
     menuBar.add(gameMenu);
 
-    frame.setJMenuBar(menuBar);
+    return menuBar;
   }
 
-  private JPanel createNavigationPanel() {
-    JPanel navigationPanel = new JPanel(new BorderLayout());
-    JButton leftButton = new JButton("←");
-    JButton rightButton = new JButton("→");
+  private void saveGame() {
+    boolean saved = GameClient.saveGameData(animal);
+    String message = saved ? "Game saved successfully!" : "Failed to save game!";
+    JOptionPane.showMessageDialog(frame, message);
+  }
 
-    leftButton.addActionListener(e -> cardLayout.previous(cardPanel));
-    rightButton.addActionListener(e -> cardLayout.next(cardPanel));
+  private void exitGame() {
+    frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+  }
 
-    navigationPanel.add(leftButton, BorderLayout.WEST);
-    navigationPanel.add(rightButton, BorderLayout.EAST);
+  private void setupAutoSave() {
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        saveGame();
+        GameClient.logout();
+        stopGameTimer();
+      }
+    });
+  }
 
-    JLabel statusLabel = new JLabel("Logged in as: " + GameClient.getCurrentUser(), SwingConstants.CENTER);
-    navigationPanel.add(statusLabel, BorderLayout.CENTER);
+  private JPanel createNavigationPanel(JPanel cardPanel, CardLayout cardLayout) {
+    JPanel panel = new JPanel(new BorderLayout());
 
-    return navigationPanel;
+    JButton prevBtn = new JButton("Previous Room");
+    JButton nextBtn = new JButton("Next Room");
+
+    prevBtn.addActionListener(e -> cardLayout.previous(cardPanel));
+    nextBtn.addActionListener(e -> cardLayout.next(cardPanel));
+
+    panel.add(prevBtn, BorderLayout.WEST);
+    panel.add(nextBtn, BorderLayout.EAST);
+
+    JLabel userLabel = new JLabel("User: " + GameClient.getCurrentUser(), SwingConstants.CENTER);
+    panel.add(userLabel, BorderLayout.CENTER);
+
+    return panel;
   }
 }
