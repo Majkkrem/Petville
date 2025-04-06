@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.ConnectException;
 import org.json.JSONObject;
 
 public class GameClient {
@@ -51,7 +50,7 @@ public class GameClient {
       json.put("petName", animal.getName());
       json.put("petType", animal.getClass().getSimpleName());
       json.put("petEnergy", animal.getEnergy());
-      json.put("petHunger", animal.getFood());
+      json.put("petHunger", animal.getHunger());
       json.put("petHealth", animal.getHealth());
       json.put("petMood", animal.getMood());
       json.put("hoursPlayer", 0);
@@ -99,8 +98,7 @@ public class GameClient {
     Animal animal = new Animal(
         json.getString("name"),
         json.getInt("energy"),
-        json.getInt("food"),
-        json.getInt("water"),
+        json.getInt("hunger"),
         json.getInt("health"),
         json.getInt("mood")
     );
@@ -108,7 +106,7 @@ public class GameClient {
     return animal;
   }
 
-  public static void testDatabaseConnection() {
+  /*public static void testDatabaseConnection() {
     try {
       HttpClient client = HttpClient.newHttpClient();
 
@@ -129,7 +127,7 @@ public class GameClient {
     } catch (Exception e) {
       System.out.println("An error occurred while testing the database connection: " + e.getMessage());
     }
-  }
+  }*/
 
   public static String getCurrentUser() {
     return currentUser;

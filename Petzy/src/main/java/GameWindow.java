@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameWindow {
   private JFrame frame;
@@ -11,16 +13,20 @@ public class GameWindow {
   private JPanel cardPanel;
   private Animal animal;
   private JMenuBar menuBar;
+  private Timer gameTimer;
+  private ScreenFactory screenFactory;
 
   public GameWindow(Animal animal) {
     this.animal = animal;
-    createAndShowGUI(animal);
+    this.frame = new JFrame("Petville - " + GameClient.getCurrentUser());
+    this.screenFactory = new ScreenFactory(frame, animal);
+    createAndShowGUI();
     setupAutoSave();
     createMenuBar();
+    startGameTimer();
   }
 
-  private void createAndShowGUI(Animal animal) {
-    frame = new JFrame("Petville - " + GameClient.getCurrentUser());
+  private void createAndShowGUI() {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(800, 600);
     frame.setLocationRelativeTo(null);
@@ -30,7 +36,6 @@ public class GameWindow {
     cardLayout = new CardLayout();
     cardPanel = new JPanel(cardLayout);
 
-    ScreenFactory screenFactory = new ScreenFactory(frame, animal);
     cardPanel.add(screenFactory.createMainScreen(), "MainScreen");
     cardPanel.add(screenFactory.createBedRoomScreen(), "BedRoomScreen");
     cardPanel.add(screenFactory.createKitchenScreen(), "KitchenScreen");
@@ -38,9 +43,40 @@ public class GameWindow {
     JPanel navigationPanel = createNavigationPanel();
     frame.add(cardPanel, BorderLayout.CENTER);
     frame.add(navigationPanel, BorderLayout.SOUTH);
-    cardPanel.revalidate();
-    cardPanel.repaint();
     frame.setVisible(true);
+  }
+
+  private void startGameTimer() {
+    if (gameTimer != null) {
+      gameTimer.cancel();
+    }
+
+    gameTimer = new Timer();
+    gameTimer.scheduleAtFixedRate(new TimerTask() {
+      @Override
+      public void run() {
+        animal.reduceStatsOverTime();
+        screenFactory.updateStats();
+
+        if (!animal.isAlive()) {
+          stopGameTimer();
+          SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(frame,
+                "You neglected your pet! Take better care of it next time!",
+                "Game Over",
+                JOptionPane.ERROR_MESSAGE);
+            frame.dispose();
+          });
+        }
+      }
+    }, 0, 5000);
+  }
+
+  private void stopGameTimer() {
+    if (gameTimer != null) {
+      gameTimer.cancel();
+      gameTimer = null;
+    }
   }
 
   private void setupAutoSave() {
@@ -54,6 +90,7 @@ public class GameWindow {
           System.out.println("Failed to save game data");
         }
         GameClient.logout();
+        stopGameTimer();
       }
     });
   }
@@ -97,7 +134,6 @@ public class GameWindow {
     navigationPanel.add(leftButton, BorderLayout.WEST);
     navigationPanel.add(rightButton, BorderLayout.EAST);
 
-    // Add status label
     JLabel statusLabel = new JLabel("Logged in as: " + GameClient.getCurrentUser(), SwingConstants.CENTER);
     navigationPanel.add(statusLabel, BorderLayout.CENTER);
 
