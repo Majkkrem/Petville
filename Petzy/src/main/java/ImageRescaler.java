@@ -9,10 +9,16 @@ public class ImageRescaler {
   private JFrame frame;
 
   public ImageRescaler(JFrame frame) {
+    if (frame == null) {
+      throw new IllegalArgumentException("Frame cannot be null");
+    }
     this.frame = frame;
   }
 
   public void setImage(Image image) {
+    if (image == null) {
+      throw new IllegalArgumentException("Image cannot be null");
+    }
     this.image = image;
     rescaleImage(frame.getWidth(), frame.getHeight());
   }
