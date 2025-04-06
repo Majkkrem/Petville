@@ -1,324 +1,304 @@
+// ScreenFactory.java
 import Animals.Animal;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ScreenFactory {
-  private JFrame frame;
-  private Animal animal;
+  private final JFrame frame;
+  private final Animal animal;
   private int coins = 100;
-  private Map<String, Integer> inventory = new HashMap<>();
+  private final Map<String, Integer> inventory = new HashMap<>();
   private Timer sleepTimer;
+  private final JPanel cardPanel;
+  private final CardLayout cardLayout;
+  private final Map<String, Map<Lables, JLabel>> overlayLabels;
 
-  public ScreenFactory(JFrame frame, Animal animal) {
+  public ScreenFactory(JFrame frame, Animal animal, JPanel cardPanel, CardLayout cardLayout) {
     this.frame = frame;
     this.animal = animal;
+    this.cardPanel = cardPanel;
+    this.cardLayout = cardLayout;
+    this.overlayLabels = new HashMap<>();
+    initializeInventory();
+  }
+
+  private void initializeInventory() {
+    inventory.put("Toy", 1);
+    inventory.put("Health Potion", 0);
+    inventory.put("Water", 2);
   }
 
   public JPanel createMainScreen() {
-    ImageRescaler rescaler = new ImageRescaler(frame); // New instance for this screen
-    JPanel mainScreen = new JPanel(new BorderLayout());
-
-    // Load the background image
-    ImageIcon backgroundIcon = new ImageIcon("images/Kitchen.png");
-    rescaler.setImage(backgroundIcon.getImage());
-
-    // Create the background label
-    JLabel backgroundLabel = new JLabel();
-    backgroundLabel.setLayout(new BorderLayout());
-    backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
-    backgroundLabel.setVerticalAlignment(JLabel.CENTER);
-
-    // Set up the rescale listener
-    rescaler.setBackgroundLabel(backgroundLabel);
-    rescaler.setupRescaleListener();
-
-    // Create the overlay panel
-    JPanel overlayPanel = new JPanel(new BorderLayout());
-    overlayPanel.setOpaque(false);
-
-    JPanel statsPanel = createStatsPanel();
-    JPanel buttonPanel = createButtonPanel();
-
-    overlayPanel.add(statsPanel, BorderLayout.NORTH);
-    overlayPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-    backgroundLabel.add(overlayPanel);
-    mainScreen.add(backgroundLabel, BorderLayout.CENTER);
-
-    return mainScreen;
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(createBackgroundPanel(), BorderLayout.CENTER);
+    panel.add(createOverlayPanel("Main"), BorderLayout.CENTER);
+    return panel;
   }
 
   public JPanel createKitchenScreen() {
-    ImageRescaler rescaler = new ImageRescaler(frame); // New instance for this screen
-    JPanel kitchenScreen = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(createBackgroundPanel(), BorderLayout.CENTER);
 
-    // Load the background image
-    ImageIcon backgroundIcon = new ImageIcon("images/Kitchen.png");
-    rescaler.setImage(backgroundIcon.getImage());
-
-    // Create the background label
-    JLabel backgroundLabel = new JLabel();
-    backgroundLabel.setLayout(new BorderLayout());
-    backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
-    backgroundLabel.setVerticalAlignment(JLabel.CENTER);
-
-    // Set up the rescale listener
-    rescaler.setBackgroundLabel(backgroundLabel);
-    rescaler.setupRescaleListener();
-
-    // Create the overlay panel
-    JPanel overlayPanel = new JPanel(new BorderLayout());
-    overlayPanel.setOpaque(false);
-
-    JLabel kitchenLabel = new JLabel("Kitchen", SwingConstants.CENTER);
-    kitchenLabel.setForeground(Color.WHITE);
+    JPanel kitchenPanel = new JPanel(new BorderLayout());
+    kitchenPanel.setOpaque(false);
 
     JPanel iconPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    ImageIcon fridgeIcon = new ImageIcon("path/to/fridge_icon.png");
-    ImageIcon inventoryIcon = new ImageIcon("path/to/inventory_icon.png");
+    iconPanel.setOpaque(false);
 
-    JButton fridgeButton = new JButton(fridgeIcon);
-    JButton inventoryButton = new JButton(inventoryIcon);
-
-    fridgeButton.addActionListener(e -> openShop());
-    inventoryButton.addActionListener(e -> openInventory());
+    JButton fridgeButton = createIconButton("Fridge", e -> openShop());
+    JButton inventoryButton = createIconButton("Inventory", e -> openInventory());
 
     iconPanel.add(fridgeButton);
     iconPanel.add(inventoryButton);
 
-    overlayPanel.add(iconPanel, BorderLayout.NORTH);
-    backgroundLabel.add(overlayPanel);
-    kitchenScreen.add(backgroundLabel, BorderLayout.CENTER);
+    kitchenPanel.add(iconPanel, BorderLayout.NORTH);
+    kitchenPanel.add(createStatsPanel("Kitchen"), BorderLayout.SOUTH);
 
-    return kitchenScreen;
+    panel.add(kitchenPanel, BorderLayout.CENTER);
+    return panel;
   }
 
   public JPanel createBedRoomScreen() {
-    ImageRescaler rescaler = new ImageRescaler(frame); // New instance for this screen
-    JPanel bedroomScreen = new JPanel(new BorderLayout());
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(createBackgroundPanel(), BorderLayout.CENTER);
 
-    // Load the background image
-    ImageIcon backgroundIcon = new ImageIcon("images/bedroom_bed_style_39274_1920x1080.jpg");
-    rescaler.setImage(backgroundIcon.getImage());
+    JPanel bedroomPanel = new JPanel(new BorderLayout());
+    bedroomPanel.setOpaque(false);
 
-    // Create the background label
-    JLabel backgroundLabel = new JLabel();
-    backgroundLabel.setLayout(new BorderLayout());
-    backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
-    backgroundLabel.setVerticalAlignment(JLabel.CENTER);
+    bedroomPanel.add(createStatsPanel("Bedroom"), BorderLayout.NORTH);
+    bedroomPanel.add(createButtonPanel(), BorderLayout.SOUTH);
 
-    // Set up the rescale listener
-    rescaler.setBackgroundLabel(backgroundLabel);
-    rescaler.setupRescaleListener();
-
-    // Create the overlay panel
-    JPanel overlayPanel = new JPanel(new BorderLayout());
-    overlayPanel.setOpaque(false);
-
-    JLabel bedroomLabel = new JLabel("Bedroom", SwingConstants.CENTER);
-    bedroomLabel.setForeground(Color.WHITE);
-
-    JPanel statsPanel = createStatsPanel();
-    JPanel buttonPanel = createButtonPanel();
-
-    overlayPanel.add(bedroomLabel, BorderLayout.CENTER);
-    overlayPanel.add(statsPanel, BorderLayout.NORTH);
-    overlayPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-    backgroundLabel.add(overlayPanel);
-    bedroomScreen.add(backgroundLabel, BorderLayout.CENTER);
-
-    return bedroomScreen;
+    panel.add(bedroomPanel, BorderLayout.CENTER);
+    return panel;
   }
 
-  private JPanel createStatsPanel() {
-    JPanel statsPanel = new JPanel(new GridLayout(1, 5));
+  private JPanel createBackgroundPanel() {
+    JLabel backgroundLabel = new JLabel("Placeholder Background", SwingConstants.CENTER);
+    backgroundLabel.setOpaque(true);
+    backgroundLabel.setBackground(Color.GRAY);
+
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(backgroundLabel, BorderLayout.CENTER);
+    return panel;
+  }
+
+  private JPanel createOverlayPanel(String screenName) {
+    JPanel overlay = new JPanel(new BorderLayout());
+    overlay.setOpaque(false);
+
+    overlay.add(createStatsPanel(screenName), BorderLayout.NORTH);
+    overlay.add(createButtonPanel(), BorderLayout.SOUTH);
+
+    return overlay;
+  }
+
+  private JPanel createStatsPanel(String screenName) {
+    JPanel statsPanel = new JPanel(new GridLayout(1, 4, 10, 10));
     statsPanel.setOpaque(false);
+    statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    JLabel energyLabel = new JLabel("Energy: " + animal.getEnergy(), SwingConstants.CENTER);
-    energyLabel.setForeground(Color.WHITE);
-    statsPanel.add(energyLabel);
+    Map<Lables, JLabel> labels = new HashMap<>();
 
-    JLabel foodLabel = new JLabel("Food: " + animal.getFood(), SwingConstants.CENTER);
-    foodLabel.setForeground(Color.WHITE);
-    statsPanel.add(foodLabel);
+    for (Lables labelType : Lables.values()) {
+      JLabel label = new JLabel(getLabelText(labelType), SwingConstants.CENTER);
+      label.setForeground(Color.WHITE);
+      label.setFont(new Font("Arial", Font.BOLD, 14));
+      statsPanel.add(label);
+      labels.put(labelType, label);
+    }
 
-    JLabel waterLabel = new JLabel("Water: " + animal.getWater(), SwingConstants.CENTER);
-    waterLabel.setForeground(Color.WHITE);
-    statsPanel.add(waterLabel);
-
-    JLabel healthLabel = new JLabel("Health: " + animal.getHealth(), SwingConstants.CENTER);
-    healthLabel.setForeground(Color.WHITE);
-    statsPanel.add(healthLabel);
-
-    JLabel moodLabel = new JLabel("Mood: " + animal.getMood(), SwingConstants.CENTER);
-    moodLabel.setForeground(Color.WHITE);
-    statsPanel.add(moodLabel);
+    overlayLabels.put(screenName, labels);
 
     return statsPanel;
   }
 
+  private String getLabelText(Lables labelType) {
+    switch (labelType) {
+      case ENERGY:
+        return "Energy: " + animal.getEnergy();
+      case HUNGER:
+        return "Hunger: " + animal.getFood();
+      case HEALTH:
+        return "Health: " + animal.getHealth();
+      case MOOD:
+        return "Mood: " + animal.getMood();
+      default:
+        return "";
+    }
+  }
+
   private JPanel createButtonPanel() {
-    JPanel buttonPanel = new JPanel(new GridLayout(1, 5));
+    JPanel buttonPanel = new JPanel(new GridLayout(1, 6, 5, 5));
     buttonPanel.setOpaque(false);
 
-    ImageIcon feedIcon = new ImageIcon("path/to/feed_button.png");
-    ImageIcon waterIcon = new ImageIcon("path/to/water_button.png");
-    ImageIcon playIcon = new ImageIcon("path/to/play_button.png");
-    ImageIcon sleepIcon = new ImageIcon("path/to/sleep_button.png");
-    ImageIcon healIcon = new ImageIcon("path/to/heal_button.png");
-
-    JButton feedButton = new JButton(feedIcon);
-    JButton waterButton = new JButton(waterIcon);
-    JButton playButton = new JButton(playIcon);
-    JToggleButton sleepButton = new JToggleButton(sleepIcon);
-    JButton healButton = new JButton(healIcon);
-
-    feedButton.addActionListener(e -> {
-      animal.feed();
-      updateStats();
-    });
-
-    waterButton.addActionListener(e -> {
-      animal.giveWater();
-      updateStats();
-    });
-
-    playButton.addActionListener(e -> {
-      animal.play();
-      updateStats();
-    });
-
-    sleepButton.addActionListener(e -> {
-      if (sleepButton.isSelected()) {
-        animal.setSleeping(true);
-        sleepTimer = new Timer();
-        sleepTimer.scheduleAtFixedRate(new TimerTask() {
-          @Override
-          public void run() {
-            animal.setEnergy(animal.getEnergy() + 5);
-            updateStats();
-          }
-        }, 0, 1000);
-      } else {
-        animal.setSleeping(false);
-        if (sleepTimer != null) {
-          sleepTimer.cancel();
-          sleepTimer = null;
-        }
-      }
-    });
-
-    healButton.addActionListener(e -> {
-      animal.heal();
-      updateStats();
-    });
-
-    buttonPanel.add(feedButton);
-    buttonPanel.add(waterButton);
-    buttonPanel.add(playButton);
-    buttonPanel.add(sleepButton);
-    buttonPanel.add(healButton);
+    String[] buttons = {"Feed", "Water", "Play", "Sleep", "Heal", "Snake Game"};
+    for (String text : buttons) {
+      JButton button = new JButton(text);
+      button.addActionListener(this::handleButtonAction);
+      buttonPanel.add(button);
+    }
 
     return buttonPanel;
   }
 
-  private void updateStats() {
-    // Logic to update stats labels
+  private JButton createIconButton(String tooltip, ActionListener action) {
+    JButton button = new JButton(tooltip);
+    button.setToolTipText(tooltip);
+    button.setContentAreaFilled(false);
+    button.setBorderPainted(false);
+    button.addActionListener(action);
+    return button;
+  }
+
+  private void handleButtonAction(ActionEvent e) {
+    String command = ((JButton) e.getSource()).getText();
+    switch (command) {
+      case "Feed":
+        animal.feed();
+        break;
+      case "Water":
+        animal.giveWater();
+        break;
+      case "Play":
+        animal.play();
+        break;
+      case "Sleep":
+        toggleSleep();
+        break;
+      case "Heal":
+        animal.heal();
+        break;
+      case "Snake Game":
+        new SnakeGameFrame(this);
+        break;
+    }
+    updateAllScreens();
+  }
+
+  private void toggleSleep() {
+    if (sleepTimer == null) {
+      animal.setSleeping(true);
+      sleepTimer = new Timer();
+      sleepTimer.scheduleAtFixedRate(new TimerTask() {
+        @Override
+        public void run() {
+          animal.setEnergy(Math.min(100, animal.getEnergy() + 5));
+          SwingUtilities.invokeLater(() -> updateAllScreens());
+        }
+      }, 0, 1000);
+    } else {
+      animal.setSleeping(false);
+      sleepTimer.cancel();
+      sleepTimer = null;
+    }
+  }
+
+  public void updateAllScreens() {
+    for (Map.Entry<String, Map<Lables, JLabel>> screenEntry : overlayLabels.entrySet()) {
+      for (Map.Entry<Lables, JLabel> labelEntry : screenEntry.getValue().entrySet()) {
+        labelEntry.getValue().setText(getLabelText(labelEntry.getKey()));
+      }
+    }
+    cardPanel.revalidate();
+    cardPanel.repaint();
+  }
+
+  public void addGold(int amount) {
+    coins += amount;
+    JOptionPane.showMessageDialog(frame, "You earned " + amount + " coins!");
+    updateAllScreens();
   }
 
   private void openShop() {
     JDialog shopDialog = new JDialog(frame, "Shop", true);
     shopDialog.setSize(400, 300);
-    shopDialog.setLocationRelativeTo(frame);
+    shopDialog.setLayout(new BorderLayout());
 
-    JPanel shopPanel = new JPanel(new BorderLayout());
+    JLabel coinLabel = new JLabel("Coins: " + coins, SwingConstants.CENTER);
+    shopDialog.add(coinLabel, BorderLayout.NORTH);
 
-    // Gold display
-    JLabel goldLabel = new JLabel("Gold: " + coins, SwingConstants.CENTER);
-    shopPanel.add(goldLabel, BorderLayout.NORTH);
-
-    // Items grid
     JPanel itemsPanel = new JPanel(new GridLayout(2, 2, 10, 10));
     String[] items = {"Food", "Toy", "Health Potion", "Water"};
     int[] prices = {10, 20, 30, 5};
 
     for (int i = 0; i < items.length; i++) {
       JPanel itemPanel = new JPanel(new BorderLayout());
-      JLabel itemLabel = new JLabel(items[i], SwingConstants.CENTER);
-      JButton buyButton = new JButton("Buy (" + prices[i] + " gold)");
-
+      JButton buyButton = new JButton("Buy (" + prices[i] + " coins)");
       int finalI = i;
+
       buyButton.addActionListener(e -> {
         if (coins >= prices[finalI]) {
           coins -= prices[finalI];
-          goldLabel.setText("Gold: " + coins);
           inventory.put(items[finalI], inventory.getOrDefault(items[finalI], 0) + 1);
-          JOptionPane.showMessageDialog(shopDialog, "You bought " + items[finalI] + "!");
+          coinLabel.setText("Coins: " + coins);
+          JOptionPane.showMessageDialog(shopDialog, "Purchased " + items[finalI] + "!");
         } else {
-          JOptionPane.showMessageDialog(shopDialog, "Not enough gold!", "Error", JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(shopDialog, "Not enough coins!", "Error", JOptionPane.ERROR_MESSAGE);
         }
       });
 
-      itemPanel.add(itemLabel, BorderLayout.CENTER);
+      itemPanel.add(new JLabel(items[i], SwingConstants.CENTER), BorderLayout.CENTER);
       itemPanel.add(buyButton, BorderLayout.SOUTH);
       itemsPanel.add(itemPanel);
     }
 
-    shopPanel.add(itemsPanel, BorderLayout.CENTER);
-
-    // Close button
-    JButton closeButton = new JButton("X");
-    closeButton.addActionListener(e -> shopDialog.dispose());
-    shopPanel.add(closeButton, BorderLayout.SOUTH);
-
-    shopDialog.add(shopPanel);
+    shopDialog.add(itemsPanel, BorderLayout.CENTER);
+    shopDialog.setLocationRelativeTo(frame);
     shopDialog.setVisible(true);
   }
 
   private void openInventory() {
     JDialog inventoryDialog = new JDialog(frame, "Inventory", true);
     inventoryDialog.setSize(400, 300);
-    inventoryDialog.setLocationRelativeTo(frame);
+    inventoryDialog.setLayout(new BorderLayout());
 
-    JPanel inventoryPanel = new JPanel(new BorderLayout());
-
-    // Items grid
     JPanel itemsPanel = new JPanel(new GridLayout(2, 2, 10, 10));
 
     for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
-      JPanel itemPanel = new JPanel(new BorderLayout());
-      JLabel itemLabel = new JLabel(entry.getKey() + " (" + entry.getValue() + ")", SwingConstants.CENTER);
-      JButton useButton = new JButton("Use");
+      if (entry.getValue() > 0) {
+        JPanel itemPanel = new JPanel(new BorderLayout());
+        JButton useButton = new JButton("Use (" + entry.getValue() + ")");
 
-      useButton.addActionListener(e -> {
-        if (entry.getValue() > 0) {
+        useButton.addActionListener(e -> {
           inventory.put(entry.getKey(), entry.getValue() - 1);
-          itemLabel.setText(entry.getKey() + " (" + (entry.getValue() - 1) + ")");
-          JOptionPane.showMessageDialog(inventoryDialog, "You used " + entry.getKey() + "!");
-        } else {
-          JOptionPane.showMessageDialog(inventoryDialog, "No " + entry.getKey() + " left!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-      });
+          useItem(entry.getKey());
+          inventoryDialog.dispose();
+          openInventory(); // Refresh
+        });
 
-      itemPanel.add(itemLabel, BorderLayout.CENTER);
-      itemPanel.add(useButton, BorderLayout.SOUTH);
-      itemsPanel.add(itemPanel);
+        itemPanel.add(new JLabel(entry.getKey(), SwingConstants.CENTER), BorderLayout.CENTER);
+        itemPanel.add(useButton, BorderLayout.SOUTH);
+        itemsPanel.add(itemPanel);
+      }
     }
 
-    inventoryPanel.add(itemsPanel, BorderLayout.CENTER);
-
-    // Close button
-    JButton closeButton = new JButton("X");
-    closeButton.addActionListener(e -> inventoryDialog.dispose());
-    inventoryPanel.add(closeButton, BorderLayout.SOUTH);
-
-    inventoryDialog.add(inventoryPanel);
+    inventoryDialog.add(itemsPanel, BorderLayout.CENTER);
+    inventoryDialog.setLocationRelativeTo(frame);
     inventoryDialog.setVisible(true);
+  }
+
+  private void useItem(String item) {
+    switch (item) {
+      case "Food":
+        animal.feed();
+        break;
+      case "Water":
+        animal.giveWater();
+        break;
+      case "Toy":
+        animal.play();
+        break;
+      case "Health Potion":
+        animal.heal();
+        break;
+    }
+    updateAllScreens();
+    JOptionPane.showMessageDialog(frame, "Used " + item + "!");
   }
 }
