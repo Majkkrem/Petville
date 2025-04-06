@@ -3,11 +3,11 @@ import Animals.Animal;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class ScreenFactory {
   private final JFrame frame;
@@ -34,6 +34,60 @@ public class ScreenFactory {
     inventory.put("Water", 2);
   }
 
+  private JButton createStyledButton(String text) {
+    JButton button = new JButton() {
+      @Override
+      protected void paintComponent(Graphics g) {
+        // Paint the button image if it exists
+        if (getIcon() != null) {
+          ImageIcon icon = (ImageIcon) getIcon();
+          g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+
+          // Paint the text manually
+          g.setColor(Color.WHITE); // Set text color
+          g.setFont(getFont());
+
+          // Calculate text position for perfect centering
+          FontMetrics fm = g.getFontMetrics();
+          int textWidth = fm.stringWidth(getText());
+          int textHeight = fm.getHeight();
+
+          int x = (getWidth() - textWidth) / 2;
+          int y = ((getHeight() - textHeight) / 2) + fm.getAscent();
+
+          g.drawString(getText(), x, y);
+        } else {
+          // Fallback if no image
+          super.paintComponent(g);
+        }
+      }
+    };
+
+    button.setText(text); // Set the button text
+
+    try {
+      // Load and scale the button image
+      ImageIcon icon = new ImageIcon(getClass().getResource("/icons/Button.png"));
+      Image img = icon.getImage().getScaledInstance(140, 70, Image.SCALE_SMOOTH);
+      button.setIcon(new ImageIcon(img));
+
+      // Style the button
+      button.setFont(new Font("Monospace", Font.BOLD, 14));
+      button.setBorderPainted(false);
+      button.setFocusPainted(false);
+      button.setContentAreaFilled(false);
+      button.setPreferredSize(new Dimension(140, 70));
+
+    } catch (Exception e) {
+      System.err.println("Error loading button image: " + e.getMessage());
+      // Fallback styling
+      button.setBackground(new Color(70, 130, 180));
+      button.setForeground(Color.WHITE);
+      button.setFont(new Font("Monospace", Font.BOLD, 14));
+    }
+    return button;
+  }
+
   public JPanel createMainScreen() {
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(createBackgroundPanel(), BorderLayout.CENTER);
@@ -51,8 +105,11 @@ public class ScreenFactory {
     JPanel iconPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     iconPanel.setOpaque(false);
 
-    JButton fridgeButton = createIconButton("Fridge", e -> openShop());
-    JButton inventoryButton = createIconButton("Inventory", e -> openInventory());
+    JButton fridgeButton = createStyledButton("Fridge");
+    fridgeButton.addActionListener(e -> openShop());
+
+    JButton inventoryButton = createStyledButton("Inventory");
+    inventoryButton.addActionListener(e -> openInventory());
 
     iconPanel.add(fridgeButton);
     iconPanel.add(inventoryButton);
@@ -139,21 +196,12 @@ public class ScreenFactory {
 
     String[] buttons = {"Feed", "Play", "Sleep", "Heal", "Snake Game"};
     for (String text : buttons) {
-      JButton button = new JButton(text);
+      JButton button = createStyledButton(text);
       button.addActionListener(this::handleButtonAction);
       buttonPanel.add(button);
     }
 
     return buttonPanel;
-  }
-
-  private JButton createIconButton(String tooltip, ActionListener action) {
-    JButton button = new JButton(tooltip);
-    button.setToolTipText(tooltip);
-    button.setContentAreaFilled(false);
-    button.setBorderPainted(false);
-    button.addActionListener(action);
-    return button;
   }
 
   private void handleButtonAction(ActionEvent e) {
@@ -226,7 +274,7 @@ public class ScreenFactory {
 
     for (int i = 0; i < items.length; i++) {
       JPanel itemPanel = new JPanel(new BorderLayout());
-      JButton buyButton = new JButton("Buy (" + prices[i] + " coins)");
+      JButton buyButton = createStyledButton("Buy (" + prices[i] + ")");
       int finalI = i;
 
       buyButton.addActionListener(e -> {
@@ -260,7 +308,7 @@ public class ScreenFactory {
     for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
       if (entry.getValue() > 0) {
         JPanel itemPanel = new JPanel(new BorderLayout());
-        JButton useButton = new JButton("Use (" + entry.getValue() + ")");
+        JButton useButton = createStyledButton("Use (" + entry.getValue() + ")");
 
         useButton.addActionListener(e -> {
           inventory.put(entry.getKey(), entry.getValue() - 1);

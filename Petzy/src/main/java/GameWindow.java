@@ -118,8 +118,65 @@ public class GameWindow {
   private JPanel createNavigationPanel(JPanel cardPanel, CardLayout cardLayout) {
     JPanel panel = new JPanel(new BorderLayout());
 
-    JButton prevBtn = new JButton("Previous Room");
-    JButton nextBtn = new JButton("Next Room");
+    // Previous button with arrow drawing
+    JButton prevBtn = new JButton("<") { // Using < as arrow
+      @Override
+      protected void paintComponent(Graphics g) {
+        if (getIcon() != null) {
+          // Draw background image
+          ImageIcon icon = (ImageIcon) getIcon();
+          g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+
+          // Draw arrow text
+          g.setColor(Color.WHITE);
+          g.setFont(new Font("Arial", Font.BOLD, 24));
+
+          FontMetrics fm = g.getFontMetrics();
+          int x = (getWidth() - fm.stringWidth(getText())) / 2;
+          int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+
+          g.drawString(getText(), x, y);
+        } else {
+          super.paintComponent(g);
+        }
+      }
+    };
+
+    // Next button with arrow drawing
+    JButton nextBtn = new JButton("") {
+      @Override
+      protected void paintComponent(Graphics g) {
+        if (getIcon() != null) {
+          // Draw background image
+          ImageIcon icon = (ImageIcon) getIcon();
+          g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+        } else {
+          super.paintComponent(g);
+        }
+      }
+    };
+
+    try {
+      // Load button images (optional - can use just text arrows)
+      ImageIcon prevIcon = new ImageIcon(getClass().getResource("/icons/Button_left.png"));
+      Image prevImg = prevIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+      prevBtn.setIcon(new ImageIcon(prevImg));
+
+      ImageIcon nextIcon = new ImageIcon(getClass().getResource("/icons/Button_right.png"));
+      Image nextImg = nextIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+      nextBtn.setIcon(new ImageIcon(nextImg));
+
+    } catch (Exception e) {
+      System.err.println("Navigation button images not found, using text arrows only");
+    }
+
+    // Style both buttons
+    for (JButton btn : new JButton[]{prevBtn, nextBtn}) {
+      btn.setBorderPainted(false);
+      btn.setFocusPainted(false);
+      btn.setContentAreaFilled(false);
+      btn.setPreferredSize(new Dimension(60, 60));
+    }
 
     prevBtn.addActionListener(e -> cardLayout.previous(cardPanel));
     nextBtn.addActionListener(e -> cardLayout.next(cardPanel));
@@ -132,4 +189,4 @@ public class GameWindow {
 
     return panel;
   }
-}
+  }
