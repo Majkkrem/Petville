@@ -123,7 +123,7 @@ public class ScreenFactory {
       case ENERGY:
         return "Energy: " + animal.getEnergy();
       case HUNGER:
-        return "Hunger: " + animal.getFood();
+        return "Hunger: " + animal.getHunger();
       case HEALTH:
         return "Health: " + animal.getHealth();
       case MOOD:
@@ -134,10 +134,10 @@ public class ScreenFactory {
   }
 
   private JPanel createButtonPanel() {
-    JPanel buttonPanel = new JPanel(new GridLayout(1, 6, 5, 5));
+    JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 5, 5));
     buttonPanel.setOpaque(false);
 
-    String[] buttons = {"Feed", "Water", "Play", "Sleep", "Heal", "Snake Game"};
+    String[] buttons = {"Feed", "Play", "Sleep", "Heal", "Snake Game"};
     for (String text : buttons) {
       JButton button = new JButton(text);
       button.addActionListener(this::handleButtonAction);
@@ -161,9 +161,6 @@ public class ScreenFactory {
     switch (command) {
       case "Feed":
         animal.feed();
-        break;
-      case "Water":
-        animal.giveWater();
         break;
       case "Play":
         animal.play();
@@ -287,9 +284,6 @@ public class ScreenFactory {
     switch (item) {
       case "Food":
         animal.feed();
-        break;
-      case "Water":
-        animal.giveWater();
         break;
       case "Toy":
         animal.play();
