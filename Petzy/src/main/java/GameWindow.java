@@ -63,6 +63,7 @@ public class GameWindow {
                 "Game Over",
                 JOptionPane.ERROR_MESSAGE);
             frame.dispose();
+            System.exit(0);
           });
         }
       }
