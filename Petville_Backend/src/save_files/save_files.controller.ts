@@ -1,8 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { SaveFilesService } from './save_files.service';
 import { CreateSaveFileDto } from './dto/create-save_file.dto';
 import { UpdateSaveFileDto } from './dto/update-save_file.dto';
+import { Role } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('Save Files')
 @Controller('save-files')
@@ -22,6 +26,13 @@ export class SaveFilesController {
   @ApiResponse({ status: 200, description: 'List of save files retrieved successfully.' })
   findAll() {
     return this.saveFilesService.findAll();
+  }
+
+  @Get(':id')
+  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  findAllById(@Param('id') id: string) {
+    return this.saveFilesService.findAllById(+id);
   }
 
   @Get(':id')
