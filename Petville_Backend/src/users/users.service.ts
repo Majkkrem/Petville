@@ -16,6 +16,7 @@ export class UsersService {
         password: hashedPassword,
       },
     });
+    console.log(createUserDto);
     delete newUser.password;
     return newUser;
   }

@@ -13,9 +13,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @Roles(Role.USER, Role.ADMIN)
-  @UseGuards(AuthGuard,RolesGuard)
   create(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return this.usersService.create(createUserDto);
   }
 
@@ -30,6 +29,7 @@ export class UsersController {
   @Roles(Role.USER, Role.ADMIN)
   @UseGuards(AuthGuard,RolesGuard)
   findOne(@Param('id') id: string) {
+    console.log(id);
     return this.usersService.findOne(+id);
   }
 
