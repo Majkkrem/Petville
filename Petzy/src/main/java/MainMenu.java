@@ -2,15 +2,13 @@ import Animals.Animal;
 import Animals.Bird;
 import Animals.Cat;
 import Animals.Dog;
-import Animals.GameLogic;
 import Animals.Rabbit;
 import Database.GameClient;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
-public class MainMenu {
+public class MainMenu { 
   private JFrame frame;
   private JTextField playerNameField;
   private JPasswordField passwordField;

@@ -18,9 +18,12 @@ model Users {
   name        String        @unique
   email       String        @unique
   password    String
+  dateOfRegister DateTime @default(now())
   Leaderboard Leaderboard[]
   Save_files  Save_files[]
   role        Role          @default(USER)
+
+  Inventory Inventory[]
 }
 
 model Leaderboard {
@@ -43,7 +46,19 @@ model Save_files {
   goldEarned  Int
   currentGold Int
   user        Users  @relation(fields: [user_id], references: [id])
+  inventory   Inventory @relation(fields: [id], references: [id])
 }
+
+model Inventory {
+  id               Int         @id @default(autoincrement())
+  user_id          Int
+  currentFood      Int
+  currentHeal      Int
+  currentEnergyBar Int
+  user             Users       @relation(fields: [user_id], references: [id])
+  save_file        Save_files? @relation
+}
+
 
 enum Role {
   ADMIN

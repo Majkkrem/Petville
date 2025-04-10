@@ -1,19 +1,17 @@
 package Animals;
 
 public class Animal {
-  private String name;
-  private int energy;
-  private int food;
-  private int water;
-  private int health;
-  private int mood;
-  private boolean isSleeping;
+    private String name;
+    private int energy;
+    private int hunger;
+    private int health;
+    private int mood;
+    private boolean isSleeping;
 
-  public Animal(String name, int energy, int food, int water, int health, int mood) {
+  public Animal(String name, int energy, int hunger, int health, int mood) {
     this.name = name;
     this.energy = energy;
-    this.food = food;
-    this.water = water;
+    this.hunger = hunger;
     this.health = health;
     this.mood = mood;
     this.isSleeping = false;
@@ -23,12 +21,11 @@ public class Animal {
     return name;
   }
 
-
   @Override
   public String toString() {
     return String.format(
-        "%s - Energy: %d, Food: %d, Water: %d, Health: %d, Mood: %d",
-        name, energy, food, water, health, mood
+        "%s - Energy: %d, Hunger:, Health: %d, Mood: %d",
+        name, energy, hunger, health, mood
     );
   }
 
@@ -40,20 +37,12 @@ public class Animal {
     this.energy = Math.max(0, Math.min(100, energy));
   }
 
-  public int getFood() {
-    return food;
+  public int getHunger() {
+    return hunger;
   }
 
-  public void setFood(int food) {
-    this.food = Math.max(0, Math.min(100, food));
-  }
-
-  public int getWater() {
-    return water;
-  }
-
-  public void setWater(int water) {
-    this.water = Math.max(0, Math.min(100, water));
+  public void setHunger(int hunger) {
+    this.hunger = Math.max(0, Math.min(100, hunger));
   }
 
   public int getHealth() {
@@ -72,42 +61,30 @@ public class Animal {
     this.mood = Math.max(0, Math.min(100, mood));
   }
 
-  public boolean isSleeping() {
-    return isSleeping;
-  }
-
   public void setSleeping(boolean sleeping) {
     isSleeping = sleeping;
   }
 
   public void reduceStatsOverTime() {
     if (!isSleeping) {
-      setEnergy(getEnergy() - 5);
+      setEnergy(getEnergy() - 2);
     }
-    setFood(getFood() - 5);
-    setWater(getWater() - 5);
-    setMood(getMood() - 5);
+    setHunger(getHunger() + 5);
+    setMood(getMood() - 3);
 
-    if (getFood() <= 0 || getWater() <= 0) {
+    if (getHunger() >= 100) {
       setHealth(getHealth() - 10);
     }
   }
 
   public void feed() {
-    setFood(getFood() + 20);
-  }
-
-  public void giveWater() {
-    setWater(getWater() + 20);
+    setHunger(getHunger() - 30);
+    if (getHunger() < 0) setHunger(0);
   }
 
   public void play() {
     setMood(getMood() + 20);
     setEnergy(getEnergy() - 10);
-  }
-
-  public void sleep() {
-    setEnergy(getEnergy() + 30);
   }
 
   public void heal() {
@@ -116,13 +93,5 @@ public class Animal {
 
   public boolean isAlive() {
     return getHealth() > 0;
-  }
-
-  public void displayStats() {
-    System.out.println("Energy: " + getEnergy());
-    System.out.println("Food: " + getFood());
-    System.out.println("Water: " + getWater());
-    System.out.println("Health: " + getHealth());
-    System.out.println("Mood: " + getMood());
   }
 }

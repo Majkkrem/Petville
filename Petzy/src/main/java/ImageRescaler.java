@@ -9,10 +9,16 @@ public class ImageRescaler {
   private JFrame frame;
 
   public ImageRescaler(JFrame frame) {
+    if (frame == null) {
+      throw new IllegalArgumentException("Frame cannot be null");
+    }
     this.frame = frame;
   }
 
   public void setImage(Image image) {
+    if (image == null) {
+      throw new IllegalArgumentException("Image cannot be null");
+    }
     this.image = image;
     rescaleImage(frame.getWidth(), frame.getHeight());
   }
@@ -40,8 +46,8 @@ public class ImageRescaler {
       int scaledHeight = (int) (image.getHeight(null) * scale);
       Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
       backgroundLabel.setIcon(new ImageIcon(scaledImage));
-      backgroundLabel.setHorizontalAlignment(JLabel.CENTER); // Center the image
-      backgroundLabel.setVerticalAlignment(JLabel.CENTER);   // Center the image
+      backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
+      backgroundLabel.setVerticalAlignment(JLabel.CENTER);
     }
   }
 }

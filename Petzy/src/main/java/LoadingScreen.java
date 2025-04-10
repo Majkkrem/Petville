@@ -37,7 +37,6 @@ public class LoadingScreen {
     frame.add(panel);
     frame.setVisible(true);
 
-    // Animate loading text
     new Timer().scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
@@ -45,15 +44,14 @@ public class LoadingScreen {
         String dots = ".".repeat(dotCount);
         loadingLabel.setText("Loading" + dots);
       }
-    }, 0, 500); // Update every 500 milliseconds
+    }, 0, 500);
 
-    // Simulate loading process
     new Timer().schedule(new TimerTask() {
       @Override
       public void run() {
         frame.dispose();
         new WelcomeScreen();
       }
-    }, 3000); // 3 seconds delay
+    }, 3000);
   }
 }
