@@ -8,23 +8,29 @@ git bash-ben/ vagy powershell-ben: ```git clone https://github.com/Majkkrem/Petv
 
 ### •	PetVille_frontend
 
-  o	Megnyitáskor terminálba ```npm i```
+  o	Megnyitáskor terminálba ```npm i```  
   
-    	Majd ```npm i react-bootstrap```
+  	Majd ```npm i react-bootstrap```  
     
-    	És ```npm i bootstrap```
+  	És ```npm i bootstrap```  
     
-    	Elindítani ```npm run dev```
+   	Elindítani ```npm run dev```
     
 ### •	Petville_Backend
 
+  o XAMPP futtatása  
   o	Megnyitás után ```npm i```  
   o Terminálba ```npx prisma db push```  
   o	.env fájl létrehozása:
   
-   	DATABASE_URL="mysql://root@localhost:3306/petville"  
-   	JWT_SECRET = "ide generáltatni egy kódot" ADMIN_USERNAME = "admin_username" ADMIN_PASSWORD = "admin_password"  
-   	Elindítani ```npm run start:dev``` 
+   ```
+   	 DATABASE_URL="mysql://root@localhost:3306/petville"  
+   	 JWT_SECRET = "ide generáltatni egy kódot"  
+   	 ADMIN_USERNAME = "admin_username"
+   	 ADMIN_PASSWORD = "admin_password"
+```
+   	Elindítani ```npm run start:dev```
+ 
     
 ### •	Petzy -> Java
 
