@@ -1,9 +1,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // ScreenFactory.java
 
 >>>>>>> main
+=======
+// ScreenFactory.java
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 =======
 // ScreenFactory.java
 >>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
@@ -13,12 +17,16 @@ import javax.swing.*;
 import java.awt.*;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.geom.Rectangle2D;
 =======
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 >>>>>>> main
+=======
+import java.awt.event.ActionEvent;
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 =======
 import java.awt.event.ActionEvent;
 >>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
@@ -56,7 +64,11 @@ public class ScreenFactory {
   private JButton createStyledButton(String text) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     JButton button = new JButton(text) {  // Set text in constructor
+=======
+    JButton button = new JButton() {
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 =======
     JButton button = new JButton() {
 >>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
@@ -109,6 +121,7 @@ public class ScreenFactory {
       button.setForeground(Color.WHITE);
       button.setFont(new Font("Monospace", Font.BOLD, 14));
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     // Ensure proper text alignment
@@ -180,6 +193,12 @@ public class ScreenFactory {
 
   public JPanel createMainScreen() {
 >>>>>>> main
+=======
+    return button;
+  }
+
+  public JPanel createMainScreen() {
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 =======
     return button;
   }
@@ -289,6 +308,7 @@ public class ScreenFactory {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   private boolean isGameOpened = false;  // Keep track if the game has been opened
 
@@ -339,6 +359,11 @@ public class ScreenFactory {
   private void toggleSleep() {
     isSleeping = !isSleeping;
     animal.setSleeping(isSleeping);
+=======
+  private JPanel createButtonPanel() {
+    JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 5, 5));
+    buttonPanel.setOpaque(false);
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 =======
   private JPanel createButtonPanel() {
     JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 5, 5));

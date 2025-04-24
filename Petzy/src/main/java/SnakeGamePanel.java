@@ -130,6 +130,7 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   private void showGameOverMessage() {
     SwingUtilities.invokeLater(() -> {
       int coinsEarned = applesEaten;
@@ -231,15 +232,14 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
 
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
   private void gameOver(Graphics g) {
-    // Dark overlay
-    g.setColor(new Color(0, 0, 0, 150));
-    g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-    // Game Over text with shadow
-    g.setColor(Color.BLACK);
+    // Game Over text
+    g.setColor(Color.RED);
     g.setFont(new Font("Monospace", Font.BOLD, 75));
     FontMetrics metrics = getFontMetrics(g.getFont());
+<<<<<<< HEAD
     g.drawString("Game Over",
         (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2 + 5,
         SCREEN_HEIGHT/2 - 45);
@@ -305,6 +305,25 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
 =======
   private JButton createGameButton(String text, int x, int y) {
 >>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
+=======
+    g.drawString("Game Over", (SCREEN_WIDTH - metrics.stringWidth("Game Over")) /2, SCREEN_HEIGHT / 2 - 50);
+
+    // Score text
+    g.setFont(new Font("Monospace", Font.BOLD, 40));
+    metrics = getFontMetrics(g.getFont());
+    g.drawString("Score: " + applesEaten, (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten)) / 2, g.getFont().getSize() * 2);
+
+    // Buttons
+    JButton exitButton = createGameButton("Exit", (SCREEN_WIDTH - 100) / 2, SCREEN_HEIGHT / 2 + 100);
+    exitButton.addActionListener(e -> exitGame());
+
+
+    this.setLayout(null);
+    this.add(exitButton);
+  }
+
+  private JButton createGameButton(String text, int x, int y) {
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
     JButton button = new JButton(text);
     button.setFont(new Font("Monospace", Font.BOLD, 20));
     button.setBounds(x, y, 100, 50);
@@ -321,6 +340,7 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   public void stopGame() {
     if (timer != null) {
       timer.stop();
@@ -331,6 +351,9 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
 
 
 >>>>>>> main
+=======
+
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 =======
 
 >>>>>>> parent of 76167e6 (Stoping the time while playing minigame)

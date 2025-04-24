@@ -44,6 +44,7 @@ public class GameWindow {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   private void showEnergyAlert() {
     // Get references to the card components from the frame
     BorderLayout layout = (BorderLayout) frame.getContentPane().getLayout();
@@ -80,6 +81,11 @@ public class GameWindow {
         }
 >>>>>>> main
       }
+=======
+  private void startGameTimer() {
+    if (gameTimer != null) {
+      gameTimer.cancel();
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 =======
   private void startGameTimer() {
     if (gameTimer != null) {
