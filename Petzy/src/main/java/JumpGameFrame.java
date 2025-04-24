@@ -2,23 +2,23 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class SnakeGameFrame extends JFrame {
+public class JumpGameFrame extends JFrame {
   private final ScreenFactory screenFactory;
-  private SnakeGamePanel snakeGamePanel;
+  private JumpGamePlus jumpGame;
 
-  public SnakeGameFrame(ScreenFactory screenFactory) {
+  public JumpGameFrame(ScreenFactory screenFactory) {
     this.screenFactory = screenFactory;
     this.screenFactory.setGameActive(true); // Jelzés, hogy játék aktív
     initialize();
   }
 
   private void initialize() {
-    setTitle("Snake Game - Earn Coins!");
+    setTitle("Jump Game - Earn Coins!");
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
 
-    snakeGamePanel = new SnakeGamePanel(this);
-    add(snakeGamePanel);
+    jumpGame = new JumpGamePlus(screenFactory);
+    add(jumpGame);
 
     addWindowListener(new WindowAdapter() {
       @Override
@@ -33,16 +33,12 @@ public class SnakeGameFrame extends JFrame {
     });
 
     pack();
-    setLocationRelativeTo(null);
+    setLocationRelativeTo(screenFactory.getFrame());
     setVisible(true);
   }
 
   private void closeGame() {
-    snakeGamePanel.stopGame();
+    jumpGame.stopGameTimer();
     screenFactory.setGameActive(false); // Jelzés, hogy játék véget ért
-  }
-
-  public ScreenFactory getScreenFactory() {
-    return screenFactory;
   }
 }
