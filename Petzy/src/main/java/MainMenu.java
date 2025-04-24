@@ -1,14 +1,14 @@
 import Animals.Animal;
-import Animals.Bird;
+import Animals.Bee;
+import Animals.Frog;
 import Animals.Cat;
 import Animals.Dog;
-import Animals.Rabbit;
 import Database.GameClient;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MainMenu { 
+public class MainMenu {
   private JFrame frame;
   private JTextField playerNameField;
   private JPasswordField passwordField;
@@ -77,7 +77,7 @@ public class MainMenu {
     gbc.gridy = 6;
     panel.add(label, gbc);
 
-    String[] animals = {"Dog", "Cat", "Bird", "Rabbit"};
+    String[] animals = {"Dog", "Cat", "Frog", "Bee"};
     animalSelector = new JComboBox<>(animals);
     animalSelector.setFont(new Font(fontName, Font.PLAIN, 16));
     gbc.gridy = 7;
@@ -121,11 +121,11 @@ public class MainMenu {
       case "Cat":
         chosenAnimal = new Cat(petName);
         break;
-      case "Bird":
-        chosenAnimal = new Bird(petName);
+      case "Frog":
+        chosenAnimal = new Frog(petName);
         break;
-      case "Rabbit":
-        chosenAnimal = new Rabbit(petName);
+      case "Bee":
+        chosenAnimal = new Bee(petName);
         break;
       default:
         chosenAnimal = new Dog(petName);
