@@ -1,12 +1,12 @@
 package Animals;
 
 public class Animal {
-    private String name;
-    private int energy;
-    private int hunger;
-    private int health;
-    private int mood;
-    private boolean isSleeping;
+  private String name;
+  private int energy;
+  private int hunger;
+  private int health;
+  private int mood;
+  private boolean isSleeping;
 
   public Animal(String name, int energy, int hunger, int health, int mood) {
     this.name = name;
@@ -65,30 +65,23 @@ public class Animal {
     isSleeping = sleeping;
   }
 
-  public void reduceStatsOverTime() {
-    if (!isSleeping) {
-      setEnergy(getEnergy() - 2);
+  public boolean reduceStatsOverTime() {
+    hunger = Math.min(100, hunger + 2);
+    if (hunger >= 100) {
+      health = Math.max(0, health - 5);
     }
-    setHunger(getHunger() + 5);
-    setMood(getMood() - 3);
-
-    if (getHunger() >= 100) {
-      setHealth(getHealth() - 10);
+    mood = Math.max(0, mood - 3);
+    if (mood <= 0) {
+      health = Math.max(0, health - 3);
     }
-  }
-
-  public void feed() {
-    setHunger(getHunger() - 30);
-    if (getHunger() < 0) setHunger(0);
-  }
-
-  public void play() {
-    setMood(getMood() + 20);
-    setEnergy(getEnergy() - 10);
-  }
-
-  public void heal() {
-    setHealth(getHealth() + 20);
+    boolean energyDepleted = false;
+    if (energy > 0) {
+      energy = Math.max(0, energy - 2);
+      if (energy == 0) {
+        energyDepleted = true;
+      }
+    }
+    return energyDepleted;
   }
 
   public boolean isAlive() {

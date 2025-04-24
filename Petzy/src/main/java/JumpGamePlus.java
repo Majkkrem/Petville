@@ -88,15 +88,8 @@ public class JumpGamePlus extends JPanel implements ActionListener, KeyListener 
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
 
-<<<<<<< HEAD
     drawBackground(g);
 
-=======
-    // Background
-    drawBackground(g);
-
-    // Ground
->>>>>>> main
     g.setColor(new Color(60, 179, 113));
     g.fillRect(0, 350, WIDTH, 50);
 
@@ -141,10 +134,6 @@ public class JumpGamePlus extends JPanel implements ActionListener, KeyListener 
     g.setFont(new Font("Monospace", Font.PLAIN, 18));
     g.drawString("Press SPACE to start", WIDTH / 2 - 90, HEIGHT / 2);
     g.drawString("SPACE to jump", WIDTH / 2 - 60, HEIGHT / 2 + 30);
-<<<<<<< HEAD
-=======
-    g.drawString("Double tap for double jump", WIDTH / 2 - 110, HEIGHT / 2 + 60);
->>>>>>> main
   }
 
   private void drawGameElements(Graphics g) {
