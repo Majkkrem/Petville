@@ -60,7 +60,6 @@ public class GameWindow {
         JOptionPane.WARNING_MESSAGE
     );
 
-<<<<<<< HEAD
     if (response == JOptionPane.YES_OPTION) {
       // Switch to Bedroom screen
       cardLayout.show(cardPanel, "Bedroom");
@@ -68,19 +67,6 @@ public class GameWindow {
       // Automatically click the Sleep button if available
       if (screenFactory != null && screenFactory.getSleepButton() != null) {
         screenFactory.getSleepButton().doClick();
-=======
-        if (!animal.isAlive()) {
-          stopGameTimer();
-          SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(frame,
-                "You neglected your pet! Take better care of it next time!",
-                "Game Over",
-                JOptionPane.ERROR_MESSAGE);
-            frame.dispose();
-            System.exit(0);
-          });
-        }
->>>>>>> main
       }
     }
   }

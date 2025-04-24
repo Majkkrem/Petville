@@ -151,9 +151,120 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
 
     if (!running) {
       timer.stop();
+      showGameOverMessage();
     }
   }
 
+<<<<<<< HEAD
+  private void showGameOverMessage() {
+    SwingUtilities.invokeLater(() -> {
+      int coinsEarned = applesEaten;
+      if (parentFrame != null && parentFrame.getScreenFactory() != null) {
+        parentFrame.getScreenFactory().addGold(coinsEarned);
+      }
+
+      JOptionPane.showMessageDialog(
+          this,
+          "Game Over! You earned " + coinsEarned + " coins!",
+          "Game Over",
+          JOptionPane.INFORMATION_MESSAGE
+      );
+    });
+  }
+
+  private void showCoinsEarned() {
+    SwingUtilities.invokeLater(() -> {
+      int coinsEarned = applesEaten;
+      String message = "Game Over!\n\nYou earned " + coinsEarned + " coins!";
+
+      // Create custom panel for better message display
+      JPanel panel = new JPanel(new BorderLayout(10, 10));
+      panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+      // Add icon
+      ImageIcon coinIcon = new ImageIcon(getClass().getResource("/icons/coin.png")); // Make sure you have this icon
+      if (coinIcon == null) {
+        // Fallback if icon not found
+        coinIcon = new ImageIcon(); // Empty icon
+      }
+
+      // Message label
+      JLabel messageLabel = new JLabel(message);
+      messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+      // Button panel
+      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+
+      // Restart button
+      JButton restartButton = new JButton("Play Again");
+      restartButton.addActionListener(e -> {
+        Window window = SwingUtilities.getWindowAncestor(panel);
+        if (window != null) {
+          window.dispose();
+        }
+        resetGame();
+      });
+
+      // Exit button
+      JButton exitButton = new JButton("Exit");
+      exitButton.addActionListener(e -> {
+        Window window = SwingUtilities.getWindowAncestor(panel);
+        if (window != null) {
+          window.dispose();
+        }
+        exitGame();
+      });
+
+      buttonPanel.add(restartButton);
+      buttonPanel.add(exitButton);
+
+      panel.add(new JLabel(coinIcon), BorderLayout.WEST);
+      panel.add(messageLabel, BorderLayout.CENTER);
+      panel.add(buttonPanel, BorderLayout.SOUTH);
+
+      // Show the custom dialog
+      JOptionPane.showMessageDialog(
+          this,
+          panel,
+          "Game Over",
+          JOptionPane.PLAIN_MESSAGE
+      );
+    });
+  }
+
+  private void gameOver(Graphics g) {
+    // Dark overlay
+    g.setColor(new Color(0, 0, 0, 150));
+    g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    // Game Over text with shadow
+    g.setColor(Color.BLACK);
+    g.setFont(new Font("Monospace", Font.BOLD, 75));
+    FontMetrics metrics = getFontMetrics(g.getFont());
+    g.drawString("Game Over",
+        (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2 + 5,
+        SCREEN_HEIGHT/2 - 50);
+
+    g.setColor(new Color(255, 100, 100));
+    g.drawString("Game Over",
+        (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2,
+        SCREEN_HEIGHT/2 - 55);
+
+    // Score text
+    g.setColor(Color.WHITE);
+    g.setFont(new Font("Monospace", Font.BOLD, 30));
+    g.drawString("Score: " + applesEaten,
+        (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten))/2,
+        SCREEN_HEIGHT/2 + 20);
+
+    // Restart instructions
+    g.setFont(new Font("Monospace", Font.PLAIN, 20));
+    g.drawString("Press R to restart",
+        (SCREEN_WIDTH - metrics.stringWidth("Press R to restart"))/2,
+        SCREEN_HEIGHT/2 + 70);
+  }
+
+=======
   private void gameOver(Graphics g) {
     // Dark overlay
     g.setColor(new Color(0, 0, 0, 150));
@@ -200,6 +311,7 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
     buttonPanel.setVisible(true);
   }
 
+>>>>>>> main
 
   private void resetGame() {
     bodyParts = 6;
@@ -215,8 +327,12 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
 
     newApple();
     timer.start();
+<<<<<<< HEAD
+    requestFocusInWindow();
+=======
     removeAll(); // Remove any buttons from game over screen
     repaint();
+>>>>>>> main
   }
 
   private JButton createGameButton(String text, Color bgColor) {
@@ -234,7 +350,9 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
 
 
   private void exitGame() {
-    parentFrame.getScreenFactory().addGold(applesEaten);
+    if (parentFrame != null && parentFrame.getScreenFactory() != null) {
+      parentFrame.getScreenFactory().addGold(applesEaten);
+    }
     parentFrame.dispose();
   }
 
@@ -243,8 +361,11 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
       timer.stop();
     }
   }
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> main
 
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -278,6 +399,11 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
         case KeyEvent.VK_DOWN:
           if (direction != 'U') {
             direction = 'D';
+          }
+          break;
+        case KeyEvent.VK_R:
+          if (!running) {
+            resetGame();
           }
           break;
       }
