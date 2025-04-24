@@ -98,8 +98,9 @@ public class GameWindow {
 
   private void saveGame() {
     boolean saved = GameClient.saveGameData(animal);
-    String message = saved ? "Game saved successfully!" : "Failed to save game!";
-    JOptionPane.showMessageDialog(frame, message);
+//    boolean savedInventory = GameClient.saveInventoryData(animal);
+//    String message = saved ? "Game saved successfully!" : "Failed to save game!";
+//    JOptionPane.showMessageDialog(frame, message);
   }
 
   private void exitGame() {

@@ -5,6 +5,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 public class GameClient {
@@ -73,6 +75,28 @@ public class GameClient {
     }
   }
 
+  public static void saveInventoryData(Map<String, Integer> inventory) {
+    try {
+      HttpClient client = HttpClient.newHttpClient();
+      JSONObject json = new JSONObject();
+      json.put("user_id", currentUserId);
+      json.put("inventory", inventory);
+
+      HttpRequest request = HttpRequest.newBuilder()
+          .uri(new URI(BASE_URL + "/save-inventory"))
+          .header("Content-Type", "application/json")
+          .POST(HttpRequest.BodyPublishers.ofString(json.toString()))
+          .build();
+
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      if (response.statusCode() == 201) {
+        System.out.println("Inventory saved successfully!");
+      } else {
+      }
+    } catch (Exception e) {
+      System.out.println("Save inventory error: " + e.getMessage());
+    }
+  }
   public static Animal loadGameData() {
     if (authToken == null || currentUser == null) return null;
 
