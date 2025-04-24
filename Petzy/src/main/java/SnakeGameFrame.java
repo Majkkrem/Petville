@@ -1,8 +1,7 @@
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class SnakeGameFrame extends JFrame {
+<<<<<<< HEAD
 <<<<<<< HEAD
   private final ScreenFactory screenFactory;
   private SnakeGamePanel snakeGamePanel;
@@ -11,14 +10,17 @@ public class SnakeGameFrame extends JFrame {
   private SnakeGamePanel snakeGamePanel;  // Declare the panel variable
 
 >>>>>>> main
+=======
+  private ScreenFactory screenFactory;
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 
   public SnakeGameFrame(ScreenFactory screenFactory) {
     this.screenFactory = screenFactory;
-    this.screenFactory.setGameActive(true); // Jelzés, hogy játék aktív
     initialize();
   }
 
   private void initialize() {
+<<<<<<< HEAD
     setTitle("Snake Game - Earn Coins!");
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setResizable(false);
@@ -57,6 +59,15 @@ public class SnakeGameFrame extends JFrame {
     screenFactory.setGameActive(false); // Jelzés, hogy játék véget ért
 =======
 >>>>>>> main
+=======
+    this.setTitle("Snake Game - Earn Coins!");
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    this.setResizable(false);
+    this.add(new SnakeGamePanel(this));
+    this.pack();
+    this.setLocationRelativeTo(null);
+    this.setVisible(true);
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
   }
 
   public ScreenFactory getScreenFactory() {
