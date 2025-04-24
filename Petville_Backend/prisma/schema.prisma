@@ -16,7 +16,7 @@ datasource db {
 model Users {
   id          Int           @id @default(autoincrement())
   name        String        @unique
-  email       String
+  email       String        @unique
   password    String
   dateOfRegister DateTime @default(now())
   Leaderboard Leaderboard[]

@@ -1,11 +1,40 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+// ScreenFactory.java
+
+>>>>>>> main
+=======
+// ScreenFactory.java
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
+=======
+// ScreenFactory.java
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 import Animals.Animal;
+
 import javax.swing.*;
 import java.awt.*;
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 import java.awt.geom.Rectangle2D;
+=======
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+>>>>>>> main
+=======
+import java.awt.event.ActionEvent;
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
+=======
+import java.awt.event.ActionEvent;
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class ScreenFactory {
   private final JFrame frame;
@@ -16,10 +45,6 @@ public class ScreenFactory {
   private final JPanel cardPanel;
   private final CardLayout cardLayout;
   private final Map<String, Map<Lables, JLabel>> overlayLabels;
-  private boolean isSleeping = false;
-  private JButton sleepButton;
-  private boolean gameActive = false;  // Új flag a játék állapotának követésére
-  private Timer statsTimer;
 
   public ScreenFactory(JFrame frame, Animal animal, JPanel cardPanel, CardLayout cardLayout) {
     this.frame = frame;
@@ -28,162 +53,162 @@ public class ScreenFactory {
     this.cardLayout = cardLayout;
     this.overlayLabels = new HashMap<>();
     initializeInventory();
-    startStatsDecreaseTimer();
-  }
-
-  private void startStatsDecreaseTimer() {
-    if (statsTimer != null) {
-      statsTimer.cancel();
-    }
-
-    statsTimer = new Timer();
-    statsTimer.scheduleAtFixedRate(new TimerTask() {
-      @Override
-      public void run() {
-        if (!gameActive && !isSleeping) {  // Csak akkor csökkenjenek a statok, ha nincs aktív játék és nem alszik
-          decreaseStats();
-          SwingUtilities.invokeLater(() -> updateAllScreens());
-        }
-      }
-    }, 0, 5000);  // 5 másodpercenként frissít
-  }
-
-  private void decreaseStats() {
-    animal.setEnergy(Math.max(0, animal.getEnergy() - 2));
-    animal.setHunger(Math.min(100, animal.getHunger() + 5));
-    animal.setMood(Math.max(0, animal.getMood() - 3));
-
-    if (animal.getHunger() >= 90) {
-      animal.setHealth(Math.max(0, animal.getHealth() - 5));
-    }
-  }
-
-  public void setGameActive(boolean active) {
-    this.gameActive = active;
-    if (!active) {
-      updateAllScreens();  // Frissítjük a statokat, ha a játék bezárul
-    }
   }
 
   private void initializeInventory() {
     inventory.put("Toy", 1);
     inventory.put("Health Potion", 0);
-    inventory.put("Food", 2);
+    inventory.put("Water", 2);
   }
 
   private JButton createStyledButton(String text) {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     JButton button = new JButton(text) {  // Set text in constructor
+=======
+    JButton button = new JButton() {
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
+=======
+    JButton button = new JButton() {
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
       @Override
       protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        // Paint the button image if it exists
         if (getIcon() != null) {
           ImageIcon icon = (ImageIcon) getIcon();
           g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+
+          // Paint the text manually
+          g.setColor(Color.WHITE); // Set text color
+          g.setFont(getFont());
+
+          // Calculate text position for perfect centering
+          FontMetrics fm = g.getFontMetrics();
+          int textWidth = fm.stringWidth(getText());
+          int textHeight = fm.getHeight();
+
+          int x = (getWidth() - textWidth) / 2;
+          int y = ((getHeight() - textHeight) / 2) + fm.getAscent();
+
+          g.drawString(getText(), x, y);
         } else {
-          g.setColor(new Color(70, 130, 180));
-          g.fillRect(0, 0, getWidth(), getHeight());
+          // Fallback if no image
+          super.paintComponent(g);
         }
-        g.setColor(Color.WHITE);
-        Font font = getFont().deriveFont(Font.BOLD, 14f);
-        g.setFont(font);
-
-        FontMetrics fm = g.getFontMetrics();
-        Rectangle2D textBounds = fm.getStringBounds(getText(), g);
-
-        // Calculate text position (centered)
-        int textX = (getWidth() - (int)textBounds.getWidth()) / 2;
-        int textY = (getHeight() - (int)textBounds.getHeight()) / 2 + fm.getAscent();
-
-        g.drawString(getText(), textX, textY);
       }
     };
 
-    button.setPreferredSize(new Dimension(150, 80));  // Slightly larger buttons
-    button.setMinimumSize(new Dimension(150, 80));
-    button.setMaximumSize(new Dimension(150, 80));
+    button.setText(text); // Set the button text
 
     try {
+      // Load and scale the button image
       ImageIcon icon = new ImageIcon(getClass().getResource("/icons/Button.png"));
-      Image img = icon.getImage().getScaledInstance(160, 80, Image.SCALE_SMOOTH);
+      Image img = icon.getImage().getScaledInstance(140, 70, Image.SCALE_SMOOTH);
       button.setIcon(new ImageIcon(img));
-      button.setFont(new Font("Arial", Font.BOLD, 18));
+
+      // Style the button
+      button.setFont(new Font("Monospace", Font.BOLD, 14));
       button.setBorderPainted(false);
       button.setFocusPainted(false);
       button.setContentAreaFilled(false);
-      button.setPreferredSize(new Dimension(160, 80)); // Slightly larger
+      button.setPreferredSize(new Dimension(140, 70));
 
     } catch (Exception e) {
       System.err.println("Error loading button image: " + e.getMessage());
+      // Fallback styling
       button.setBackground(new Color(70, 130, 180));
       button.setForeground(Color.WHITE);
-      button.setFont(new Font("Arial", Font.BOLD, 14));
-      button.setPreferredSize(new Dimension(160, 80));
+      button.setFont(new Font("Monospace", Font.BOLD, 14));
     }
+<<<<<<< HEAD
+<<<<<<< HEAD
 
     // Ensure proper text alignment
     button.setHorizontalTextPosition(SwingConstants.CENTER);
     button.setVerticalTextPosition(SwingConstants.CENTER);
+=======
+    JButton button = new JButton(text) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (getIcon() != null) {
+          ImageIcon icon = (ImageIcon) getIcon();
+          g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+        }
+
+        g.setColor(Color.WHITE);
+        g.setFont(getFont());
+        FontMetrics fm = g.getFontMetrics();
+        int x = (getWidth() - fm.stringWidth(getText())) / 2;
+        int y = ((getHeight() - fm.getHeight()) / 2) + fm.getAscent();
+        g.drawString(getText(), x, y);
+      }
+    };
+
+    // Dynamically adjust button size based on text length
+    button.setPreferredSize(new Dimension(150, 80));  // Slightly larger buttons
+    button.setMinimumSize(new Dimension(150, 80));
+    button.setMaximumSize(new Dimension(150, 80));
+
+    button.setMargin(new Insets(0, 0, 0, 0));
+
+    try {
+      ImageIcon icon = new ImageIcon(getClass().getResource("/icons/Button.png"));
+      Image img = icon.getImage().getScaledInstance(150, 80, Image.SCALE_SMOOTH);
+      button.setIcon(new ImageIcon(img));
+    } catch (Exception e) {
+      button.setBackground(new Color(70, 130, 180));
+      button.setOpaque(true);
+    }
+
+    button.setFont(new Font("Monospace", Font.BOLD, 16));  // Adjust font size if needed
+    button.setForeground(Color.WHITE);
+    button.setBorderPainted(false);
+    button.setFocusPainted(false);
+    button.setContentAreaFilled(false);
+>>>>>>> main
 
     return button;
   }
 
+<<<<<<< HEAD
   public JPanel createPlayGroundScreen() {
+=======
+
+  private JPanel createButtonPanel() {
+    JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+    buttonPanel.setOpaque(false);
+
+    String[] buttons = {"Snake Game", "Jump Game"};
+    for (String text : buttons) {
+      JButton button = createStyledButton(text);
+      button.addActionListener(this::handleButtonAction);
+      buttonPanel.add(button);
+    }
+
+    return buttonPanel;
+  }
+
+  public JPanel createMainScreen() {
+>>>>>>> main
+=======
+    return button;
+  }
+
+  public JPanel createMainScreen() {
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
+=======
+    return button;
+  }
+
+  public JPanel createMainScreen() {
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(createBackgroundPanel(), BorderLayout.CENTER);
-    JPanel playgroundPanel = new JPanel(new BorderLayout());
-    playgroundPanel.setOpaque(false);
-    playgroundPanel.add(createStatsPanel("Playground"), BorderLayout.NORTH);
-    JPanel buttonPanel = new JPanel();
-    buttonPanel.setOpaque(false);
-    JButton snakeGameButton = createStyledButton("Snake Game");
-    snakeGameButton.addActionListener(e -> {
-      setGameActive(true);  // Játék aktív
-      new SnakeGameFrame(this);
-    });
-    JButton jumpGameButton = createStyledButton("Jump Game");
-    jumpGameButton.addActionListener(e -> {
-      setGameActive(true);  // Játék aktív
-      new JumpGameFrame(this);
-    });
-    buttonPanel.add(snakeGameButton);
-    buttonPanel.add(jumpGameButton);
-    playgroundPanel.add(buttonPanel, BorderLayout.SOUTH);
-    panel.add(playgroundPanel, BorderLayout.CENTER);
+    panel.add(createOverlayPanel("Main"), BorderLayout.CENTER);
     return panel;
-  }
-
-  public JFrame getFrame() {
-    return frame;
-  }
-
-  public JPanel createBedRoomScreen() {
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(createBackgroundPanel(), BorderLayout.CENTER);
-
-    JPanel bedroomPanel = new JPanel(new BorderLayout());
-    bedroomPanel.setOpaque(false);
-
-    bedroomPanel.add(createStatsPanel("Bedroom"), BorderLayout.NORTH);
-
-    // Only add Sleep button
-    JPanel buttonPanel = new JPanel();
-    buttonPanel.setOpaque(false);
-    sleepButton = createStyledButton("Sleep");
-    sleepButton.addActionListener(e -> toggleSleep());
-    buttonPanel.add(sleepButton);
-
-    bedroomPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-    panel.add(bedroomPanel, BorderLayout.CENTER);
-    return panel;
-  }
-
-  public boolean isSleeping() {
-    return isSleeping;
-  }
-
-  public JButton getSleepButton() {
-    return sleepButton;
   }
 
   public JPanel createKitchenScreen() {
@@ -212,6 +237,20 @@ public class ScreenFactory {
     return panel;
   }
 
+  public JPanel createBedRoomScreen() {
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.add(createBackgroundPanel(), BorderLayout.CENTER);
+
+    JPanel bedroomPanel = new JPanel(new BorderLayout());
+    bedroomPanel.setOpaque(false);
+
+    bedroomPanel.add(createStatsPanel("Bedroom"), BorderLayout.NORTH);
+    bedroomPanel.add(createButtonPanel(), BorderLayout.SOUTH);
+
+    panel.add(bedroomPanel, BorderLayout.CENTER);
+    return panel;
+  }
+
   private JPanel createBackgroundPanel() {
     JLabel backgroundLabel = new JLabel("Placeholder Background", SwingConstants.CENTER);
     backgroundLabel.setOpaque(true);
@@ -222,20 +261,14 @@ public class ScreenFactory {
     return panel;
   }
 
-  private void useItem(String item) {
-    switch (item) {
-      case "Food":
-        animal.setHunger(Math.min(100, animal.getHunger() - 30));
-        break;
-      case "Health Potion":
-        animal.setHealth(Math.min(100, animal.getHealth() + 50));
-        break;
-      case "Toy":
-        animal.setMood(Math.min(100, animal.getMood() + 40));
-        break;
-    }
-    updateAllScreens();
-    JOptionPane.showMessageDialog(frame, "Used " + item + "!");
+  private JPanel createOverlayPanel(String screenName) {
+    JPanel overlay = new JPanel(new BorderLayout());
+    overlay.setOpaque(false);
+
+    overlay.add(createStatsPanel(screenName), BorderLayout.NORTH);
+    overlay.add(createButtonPanel(), BorderLayout.SOUTH);
+
+    return overlay;
   }
 
   private JPanel createStatsPanel(String screenName) {
@@ -247,8 +280,8 @@ public class ScreenFactory {
 
     for (Lables labelType : Lables.values()) {
       JLabel label = new JLabel(getLabelText(labelType), SwingConstants.CENTER);
-      label.setForeground(Color.BLACK);
-      label.setFont(new Font("Arial", Font.BOLD, 18));
+      label.setForeground(Color.WHITE);
+      label.setFont(new Font("Arial", Font.BOLD, 14));
       statsPanel.add(label);
       labels.put(labelType, label);
     }
@@ -273,11 +306,105 @@ public class ScreenFactory {
     }
   }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  private boolean isGameOpened = false;  // Keep track if the game has been opened
+
+
+  private void handleButtonAction(ActionEvent e) {
+    String command = ((JButton) e.getSource()).getText();
+
+    // Prevent opening the game if it's already opened
+    if (isGameOpened) {
+      JOptionPane.showMessageDialog(frame, "You can only play one game at a time!");
+      return;
+    }
+
+    switch (command) {
+      case "Snake Game":
+        isGameOpened = true;  // Mark the game as opened
+        SnakeGameFrame snakeFrame = new SnakeGameFrame(this);
+        snakeFrame.addWindowListener(new WindowAdapter() {
+          @Override
+          public void windowClosed(WindowEvent e) {
+            isGameOpened = false;  // Mark the game as closed
+          }
+        });
+        break;
+      case "Jump Game":
+        isGameOpened = true;
+        JumpGameFrame jumpFrame = new JumpGameFrame(this);
+        jumpFrame.addWindowListener(new WindowAdapter() {
+          @Override
+          public void windowClosed(WindowEvent e) {
+            isGameOpened = false;
+          }
+        });
+        break;
+    }
+    updateAllScreens();
+  }
+
+  public void setGameOpened(boolean isOpened) {
+    this.isGameOpened = isOpened;
+  }
+
+  public JFrame getFrame() {
+    return frame;
+  }
+
+>>>>>>> main
   private void toggleSleep() {
     isSleeping = !isSleeping;
     animal.setSleeping(isSleeping);
+=======
+  private JPanel createButtonPanel() {
+    JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 5, 5));
+    buttonPanel.setOpaque(false);
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
+=======
+  private JPanel createButtonPanel() {
+    JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 5, 5));
+    buttonPanel.setOpaque(false);
+>>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
 
-    if (isSleeping) {
+    String[] buttons = {"Feed", "Play", "Sleep", "Heal", "Snake Game"};
+    for (String text : buttons) {
+      JButton button = createStyledButton(text);
+      button.addActionListener(this::handleButtonAction);
+      buttonPanel.add(button);
+    }
+
+    return buttonPanel;
+  }
+
+  private void handleButtonAction(ActionEvent e) {
+    String command = ((JButton) e.getSource()).getText();
+    switch (command) {
+      case "Feed":
+        animal.feed();
+        break;
+      case "Play":
+        animal.play();
+        break;
+      case "Sleep":
+        toggleSleep();
+        break;
+      case "Heal":
+        animal.heal();
+        break;
+      case "Snake Game":
+        new SnakeGameFrame(this);
+        break;
+    }
+    updateAllScreens();
+  }
+
+  private void toggleSleep() {
+    if (sleepTimer == null) {
+      animal.setSleeping(true);
       sleepTimer = new Timer();
       sleepTimer.scheduleAtFixedRate(new TimerTask() {
         @Override
@@ -286,13 +413,10 @@ public class ScreenFactory {
           SwingUtilities.invokeLater(() -> updateAllScreens());
         }
       }, 0, 1000);
-      sleepButton.setText("Wake Up");
     } else {
-      if (sleepTimer != null) {
-        sleepTimer.cancel();
-        sleepTimer = null;
-      }
-      sleepButton.setText("Sleep");
+      animal.setSleeping(false);
+      sleepTimer.cancel();
+      sleepTimer = null;
     }
   }
 
@@ -301,9 +425,6 @@ public class ScreenFactory {
       for (Map.Entry<Lables, JLabel> labelEntry : screenEntry.getValue().entrySet()) {
         labelEntry.getValue().setText(getLabelText(labelEntry.getKey()));
       }
-    }
-    if (sleepButton != null) {
-      sleepButton.setText(isSleeping ? "Wake Up" : "Sleep");
     }
     cardPanel.revalidate();
     cardPanel.repaint();
@@ -323,11 +444,9 @@ public class ScreenFactory {
     JLabel coinLabel = new JLabel("Coins: " + coins, SwingConstants.CENTER);
     shopDialog.add(coinLabel, BorderLayout.NORTH);
 
-    JPanel itemsPanel = new JPanel(new GridLayout(2, 1, 10, 10));
-
-    // Only show Food and Health Potion in shop
-    String[] items = {"Food", "Health Potion", "Toy"};
-    int[] prices = {20, 30, 10};
+    JPanel itemsPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+    String[] items = {"Food", "Toy", "Health Potion", "Water"};
+    int[] prices = {10, 20, 30, 5};
 
     for (int i = 0; i < items.length; i++) {
       JPanel itemPanel = new JPanel(new BorderLayout());
@@ -371,7 +490,7 @@ public class ScreenFactory {
           inventory.put(entry.getKey(), entry.getValue() - 1);
           useItem(entry.getKey());
           inventoryDialog.dispose();
-          openInventory();
+          openInventory(); // Refresh
         });
 
         itemPanel.add(new JLabel(entry.getKey(), SwingConstants.CENTER), BorderLayout.CENTER);
@@ -383,5 +502,21 @@ public class ScreenFactory {
     inventoryDialog.add(itemsPanel, BorderLayout.CENTER);
     inventoryDialog.setLocationRelativeTo(frame);
     inventoryDialog.setVisible(true);
+  }
+
+  private void useItem(String item) {
+    switch (item) {
+      case "Food":
+        animal.feed();
+        break;
+      case "Toy":
+        animal.play();
+        break;
+      case "Health Potion":
+        animal.heal();
+        break;
+    }
+    updateAllScreens();
+    JOptionPane.showMessageDialog(frame, "Used " + item + "!");
   }
 }

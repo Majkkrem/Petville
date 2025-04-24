@@ -43,54 +43,9 @@ public class GameWindow {
     frame.setVisible(true);
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  private void showEnergyAlert() {
-    // Get references to the card components from the frame
-    BorderLayout layout = (BorderLayout) frame.getContentPane().getLayout();
-    JPanel cardPanel = (JPanel) layout.getLayoutComponent(BorderLayout.CENTER);
-    CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
-
-    int response = JOptionPane.showConfirmDialog(
-        frame,
-        "Your pet is completely exhausted! Would you like to go to the bedroom to rest?",
-        "Energy Depleted",
-        JOptionPane.YES_NO_OPTION,
-        JOptionPane.WARNING_MESSAGE
-    );
-
-<<<<<<< HEAD
-    if (response == JOptionPane.YES_OPTION) {
-      // Switch to Bedroom screen
-      cardLayout.show(cardPanel, "Bedroom");
-
-      // Automatically click the Sleep button if available
-      if (screenFactory != null && screenFactory.getSleepButton() != null) {
-        screenFactory.getSleepButton().doClick();
-=======
-        if (!animal.isAlive()) {
-          stopGameTimer();
-          SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(frame,
-                "You neglected your pet! Take better care of it next time!",
-                "Game Over",
-                JOptionPane.ERROR_MESSAGE);
-            frame.dispose();
-            System.exit(0);
-          });
-        }
->>>>>>> main
-      }
-=======
   private void startGameTimer() {
     if (gameTimer != null) {
       gameTimer.cancel();
->>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
-=======
-  private void startGameTimer() {
-    if (gameTimer != null) {
-      gameTimer.cancel();
->>>>>>> parent of 76167e6 (Stoping the time while playing minigame)
     }
 
     gameTimer = new Timer();

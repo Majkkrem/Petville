@@ -18,8 +18,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const API_BASE_URL = 'http://localhost:3000';
-
   const validatePassword = (pwd: string): boolean => {
     if (pwd.length < 8) {
       setError('Password must be at least 8 characters long.');
@@ -46,7 +44,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/users`, {
+      const response = await fetch(`http://localhost:3000/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
