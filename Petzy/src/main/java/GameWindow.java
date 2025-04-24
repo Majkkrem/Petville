@@ -1,4 +1,3 @@
-// GameWindow.java
 import Animals.Animal;
 import Database.GameClient;
 import javax.swing.*;
@@ -7,6 +6,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.JOptionPane;
+import java.awt.CardLayout;
 
 public class GameWindow {
   private JFrame frame;
@@ -16,6 +17,9 @@ public class GameWindow {
 
   public GameWindow(Animal animal) {
     this.animal = animal;
+    if (animal.getEnergy() <= 0) {
+      SwingUtilities.invokeLater(() -> showEnergyAlert());
+    }
     initialize();
   }
 
@@ -30,44 +34,41 @@ public class GameWindow {
 
     screenFactory = new ScreenFactory(frame, animal, cardPanel, cardLayout);
 
-    cardPanel.add(screenFactory.createMainScreen(), "Main");
-    cardPanel.add(screenFactory.createKitchenScreen(), "Kitchen");
+    cardPanel.add(screenFactory.createPlayGroundScreen(), "Playground");
     cardPanel.add(screenFactory.createBedRoomScreen(), "Bedroom");
+    cardPanel.add(screenFactory.createKitchenScreen(), "Kitchen");
 
     frame.add(cardPanel, BorderLayout.CENTER);
     frame.add(createNavigationPanel(cardPanel, cardLayout), BorderLayout.SOUTH);
     frame.setJMenuBar(createMenuBar());
 
     setupAutoSave();
-    startGameTimer();
     frame.setVisible(true);
   }
 
-  private void startGameTimer() {
-    if (gameTimer != null) {
-      gameTimer.cancel();
-    }
+  private void showEnergyAlert() {
+    // Get references to the card components from the frame
+    BorderLayout layout = (BorderLayout) frame.getContentPane().getLayout();
+    JPanel cardPanel = (JPanel) layout.getLayoutComponent(BorderLayout.CENTER);
+    CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
 
-    gameTimer = new Timer();
-    gameTimer.scheduleAtFixedRate(new TimerTask() {
-      @Override
-      public void run() {
-        animal.reduceStatsOverTime();
-        screenFactory.updateAllScreens();
+    int response = JOptionPane.showConfirmDialog(
+        frame,
+        "Your pet is completely exhausted! Would you like to go to the bedroom to rest?",
+        "Energy Depleted",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE
+    );
 
-        if (!animal.isAlive()) {
-          stopGameTimer();
-          SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(frame,
-                "You neglected your pet! Take better care of it next time!",
-                "Game Over",
-                JOptionPane.ERROR_MESSAGE);
-            frame.dispose();
-            System.exit(0);
-          });
-        }
+    if (response == JOptionPane.YES_OPTION) {
+      // Switch to Bedroom screen
+      cardLayout.show(cardPanel, "Bedroom");
+
+      // Automatically click the Sleep button if available
+      if (screenFactory != null && screenFactory.getSleepButton() != null) {
+        screenFactory.getSleepButton().doClick();
       }
-    }, 0, 5000);
+    }
   }
 
   private void stopGameTimer() {
@@ -121,22 +122,17 @@ public class GameWindow {
     JPanel panel = new JPanel(new BorderLayout());
 
     // Previous button with arrow drawing
-    JButton prevBtn = new JButton("<") { // Using < as arrow
+    JButton prevBtn = new JButton() {
       @Override
       protected void paintComponent(Graphics g) {
         if (getIcon() != null) {
-          // Draw background image
           ImageIcon icon = (ImageIcon) getIcon();
           g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
-
-          // Draw arrow text
           g.setColor(Color.WHITE);
           g.setFont(new Font("Arial", Font.BOLD, 24));
-
           FontMetrics fm = g.getFontMetrics();
           int x = (getWidth() - fm.stringWidth(getText())) / 2;
           int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
-
           g.drawString(getText(), x, y);
         } else {
           super.paintComponent(g);
@@ -149,7 +145,6 @@ public class GameWindow {
       @Override
       protected void paintComponent(Graphics g) {
         if (getIcon() != null) {
-          // Draw background image
           ImageIcon icon = (ImageIcon) getIcon();
           g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
         } else {
@@ -159,7 +154,6 @@ public class GameWindow {
     };
 
     try {
-      // Load button images (optional - can use just text arrows)
       ImageIcon prevIcon = new ImageIcon(getClass().getResource("/icons/Button_left.png"));
       Image prevImg = prevIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
       prevBtn.setIcon(new ImageIcon(prevImg));
@@ -167,12 +161,10 @@ public class GameWindow {
       ImageIcon nextIcon = new ImageIcon(getClass().getResource("/icons/Button_right.png"));
       Image nextImg = nextIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
       nextBtn.setIcon(new ImageIcon(nextImg));
-
     } catch (Exception e) {
       System.err.println("Navigation button images not found, using text arrows only");
     }
 
-    // Style both buttons
     for (JButton btn : new JButton[]{prevBtn, nextBtn}) {
       btn.setBorderPainted(false);
       btn.setFocusPainted(false);
@@ -180,8 +172,27 @@ public class GameWindow {
       btn.setPreferredSize(new Dimension(60, 60));
     }
 
-    prevBtn.addActionListener(e -> cardLayout.previous(cardPanel));
-    nextBtn.addActionListener(e -> cardLayout.next(cardPanel));
+    prevBtn.addActionListener(e -> {
+      if (screenFactory.isSleeping()) {
+        JOptionPane.showMessageDialog(frame,
+            "Can't change screens while pet is sleeping!",
+            "Warning",
+            JOptionPane.WARNING_MESSAGE);
+      } else {
+        cardLayout.previous(cardPanel);
+      }
+    });
+
+    nextBtn.addActionListener(e -> {
+      if (screenFactory.isSleeping()) {
+        JOptionPane.showMessageDialog(frame,
+            "Can't change screens while pet is sleeping!",
+            "Warning",
+            JOptionPane.WARNING_MESSAGE);
+      } else {
+        cardLayout.next(cardPanel);
+      }
+    });
 
     panel.add(prevBtn, BorderLayout.WEST);
     panel.add(nextBtn, BorderLayout.EAST);
@@ -191,4 +202,4 @@ public class GameWindow {
 
     return panel;
   }
-  }
+}
