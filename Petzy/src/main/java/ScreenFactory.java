@@ -1,7 +1,19 @@
+<<<<<<< HEAD
+=======
+// ScreenFactory.java
+
+>>>>>>> main
 import Animals.Animal;
+
 import javax.swing.*;
 import java.awt.*;
+<<<<<<< HEAD
 import java.awt.geom.Rectangle2D;
+=======
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+>>>>>>> main
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -72,6 +84,7 @@ public class ScreenFactory {
   }
 
   private JButton createStyledButton(String text) {
+<<<<<<< HEAD
     JButton button = new JButton(text) {  // Set text in constructor
       @Override
       protected void paintComponent(Graphics g) {
@@ -123,11 +136,72 @@ public class ScreenFactory {
     // Ensure proper text alignment
     button.setHorizontalTextPosition(SwingConstants.CENTER);
     button.setVerticalTextPosition(SwingConstants.CENTER);
+=======
+    JButton button = new JButton(text) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (getIcon() != null) {
+          ImageIcon icon = (ImageIcon) getIcon();
+          g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+        }
+
+        g.setColor(Color.WHITE);
+        g.setFont(getFont());
+        FontMetrics fm = g.getFontMetrics();
+        int x = (getWidth() - fm.stringWidth(getText())) / 2;
+        int y = ((getHeight() - fm.getHeight()) / 2) + fm.getAscent();
+        g.drawString(getText(), x, y);
+      }
+    };
+
+    // Dynamically adjust button size based on text length
+    button.setPreferredSize(new Dimension(150, 80));  // Slightly larger buttons
+    button.setMinimumSize(new Dimension(150, 80));
+    button.setMaximumSize(new Dimension(150, 80));
+
+    button.setMargin(new Insets(0, 0, 0, 0));
+
+    try {
+      ImageIcon icon = new ImageIcon(getClass().getResource("/icons/Button.png"));
+      Image img = icon.getImage().getScaledInstance(150, 80, Image.SCALE_SMOOTH);
+      button.setIcon(new ImageIcon(img));
+    } catch (Exception e) {
+      button.setBackground(new Color(70, 130, 180));
+      button.setOpaque(true);
+    }
+
+    button.setFont(new Font("Monospace", Font.BOLD, 16));  // Adjust font size if needed
+    button.setForeground(Color.WHITE);
+    button.setBorderPainted(false);
+    button.setFocusPainted(false);
+    button.setContentAreaFilled(false);
+>>>>>>> main
 
     return button;
   }
 
+<<<<<<< HEAD
   public JPanel createPlayGroundScreen() {
+=======
+
+  private JPanel createButtonPanel() {
+    JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+    buttonPanel.setOpaque(false);
+
+    String[] buttons = {"Snake Game", "Jump Game"};
+    for (String text : buttons) {
+      JButton button = createStyledButton(text);
+      button.addActionListener(this::handleButtonAction);
+      buttonPanel.add(button);
+    }
+
+    return buttonPanel;
+  }
+
+  public JPanel createMainScreen() {
+>>>>>>> main
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(createBackgroundPanel(), BorderLayout.CENTER);
     JPanel playgroundPanel = new JPanel(new BorderLayout());
@@ -273,6 +347,54 @@ public class ScreenFactory {
     }
   }
 
+<<<<<<< HEAD
+=======
+  private boolean isGameOpened = false;  // Keep track if the game has been opened
+
+
+  private void handleButtonAction(ActionEvent e) {
+    String command = ((JButton) e.getSource()).getText();
+
+    // Prevent opening the game if it's already opened
+    if (isGameOpened) {
+      JOptionPane.showMessageDialog(frame, "You can only play one game at a time!");
+      return;
+    }
+
+    switch (command) {
+      case "Snake Game":
+        isGameOpened = true;  // Mark the game as opened
+        SnakeGameFrame snakeFrame = new SnakeGameFrame(this);
+        snakeFrame.addWindowListener(new WindowAdapter() {
+          @Override
+          public void windowClosed(WindowEvent e) {
+            isGameOpened = false;  // Mark the game as closed
+          }
+        });
+        break;
+      case "Jump Game":
+        isGameOpened = true;
+        JumpGameFrame jumpFrame = new JumpGameFrame(this);
+        jumpFrame.addWindowListener(new WindowAdapter() {
+          @Override
+          public void windowClosed(WindowEvent e) {
+            isGameOpened = false;
+          }
+        });
+        break;
+    }
+    updateAllScreens();
+  }
+
+  public void setGameOpened(boolean isOpened) {
+    this.isGameOpened = isOpened;
+  }
+
+  public JFrame getFrame() {
+    return frame;
+  }
+
+>>>>>>> main
   private void toggleSleep() {
     isSleeping = !isSleeping;
     animal.setSleeping(isSleeping);

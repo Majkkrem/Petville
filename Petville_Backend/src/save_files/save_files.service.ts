@@ -28,6 +28,10 @@ export class SaveFilesService {
     return this.prisma.save_files.findMany();
   }
 
+  findAllById(id: number) {
+    return this.prisma.save_files.findMany({ where: { user_id: id } });
+  }
+
   findOne(id: number) {
     return this.prisma.save_files.findUnique({ where: { id } });
   }

@@ -155,6 +155,7 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
     }
   }
 
+<<<<<<< HEAD
   private void showGameOverMessage() {
     SwingUtilities.invokeLater(() -> {
       int coinsEarned = applesEaten;
@@ -263,6 +264,54 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
         SCREEN_HEIGHT/2 + 70);
   }
 
+=======
+  private void gameOver(Graphics g) {
+    // Dark overlay
+    g.setColor(new Color(0, 0, 0, 150));
+    g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    // Game Over text with shadow
+    g.setColor(Color.BLACK);
+    g.setFont(new Font("Monospace", Font.BOLD, 75));
+    FontMetrics metrics = getFontMetrics(g.getFont());
+    g.drawString("Game Over",
+        (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2 + 5,
+        SCREEN_HEIGHT/2 - 45);
+
+    g.setColor(new Color(255, 100, 100));
+    g.drawString("Game Over",
+        (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2,
+        SCREEN_HEIGHT/2 - 50);
+
+    // Score text
+    g.setColor(Color.WHITE);
+    g.setFont(new Font("Monospace", Font.BOLD, 40));
+    metrics = getFontMetrics(g.getFont());
+    g.drawString("Score: " + applesEaten,
+        (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten))/2,
+        SCREEN_HEIGHT/2 + 20);
+
+    // Create prettier buttons
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+    buttonPanel.setOpaque(false);
+    buttonPanel.setBounds(SCREEN_WIDTH/2 - 150, SCREEN_HEIGHT/2 + 80, 300, 60);
+
+    JButton restartButton = createGameButton("Restart", Color.GREEN);
+    restartButton.addActionListener(e -> resetGame());
+
+    JButton exitButton = createGameButton("Exit", Color.RED);
+    exitButton.addActionListener(e -> exitGame());
+
+    setLayout(null);
+    buttonPanel.setOpaque(false);
+    buttonPanel.setBounds(SCREEN_WIDTH / 2 - 150, SCREEN_HEIGHT / 2 + 80, 300, 60);
+    buttonPanel.add(restartButton);
+    buttonPanel.add(exitButton);
+    add(buttonPanel);
+    buttonPanel.setVisible(true);
+  }
+
+>>>>>>> main
 
   private void resetGame() {
     bodyParts = 6;
@@ -278,7 +327,12 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
 
     newApple();
     timer.start();
+<<<<<<< HEAD
     requestFocusInWindow();
+=======
+    removeAll(); // Remove any buttons from game over screen
+    repaint();
+>>>>>>> main
   }
 
   private JButton createGameButton(String text, Color bgColor) {
@@ -307,6 +361,11 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
       timer.stop();
     }
   }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> main
 
   @Override
   public void actionPerformed(ActionEvent e) {

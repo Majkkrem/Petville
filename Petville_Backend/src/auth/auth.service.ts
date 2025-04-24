@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, LoginDtoWeb } from './dto/login.dto';
 import { verify } from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma.service';
@@ -16,6 +16,22 @@ export class AuthService {
     });
     if (await verify(user.password, loginDto.password)) {
       const payload = { sub: user.id, name: user.name, role: user.role };
+      return payload;
+    } else {
+      throw new Error('Invalid pass');
+    }
+  }
+
+  async loginWeb(loginDto: LoginDtoWeb): Promise<{ sub: number, email: string, role: string }> {
+    
+    const user = await this.db.users.findUniqueOrThrow({
+      where: {
+        email: loginDto.email
+      }
+    });
+    console.log(user.password);
+    if (await verify(user.password, loginDto.password)) {
+      const payload = { sub: user.id, email: user.email, role: user.role };
       return payload;
     } else {
       throw new Error('Invalid pass');

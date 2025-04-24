@@ -1,37 +1,34 @@
-import React, { useState } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-import LoginModal from './LoginModal';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
+import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const CustomNavbar: React.FC = () => {
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogoutClick = () => {
-    setShowLoginModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowLoginModal(false);
+    navigate('/');
   };
 
   return (
-    <>
-      <Navbar bg="dark" variant="dark" expand="lg" className="navbar-dark">
-        <Container fluid className="justify-content-center">
-          <Navbar.Collapse id="navbarSupportedContent">
-            <Nav className="mx-auto">
-              <Nav.Link href="#game-description">Home</Nav.Link>
-              <Nav.Link href="#pictures">My Pets</Nav.Link>
-              <Nav.Link onClick={handleLogoutClick} style={{ cursor: 'pointer' }}>
-                Logout
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-    </>
-
-  
+    <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+      <Container fluid>
+        <Navbar.Brand href="#home" className="me-auto">PetVille</Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="ms-auto">
+            <Nav.Link href="#game-description" className="px-3">Home</Nav.Link>
+            <Nav.Link href="#pictures" className="px-3">My Pets</Nav.Link>
+            <Button 
+              variant="outline-light" 
+              onClick={handleLogoutClick} 
+              className="ms-lg-3 mt-2 mt-lg-0"
+            >
+              Logout
+            </Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
