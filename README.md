@@ -8,9 +8,9 @@ git bash-ben/ vagy powershell-ben: ```git clone https://github.com/Majkkrem/Petv
 
 ### •	PetVille_frontend
 
-  o	Megnyitáskor terminálba ```npm i```  
-  
-  	Majd:
+  o	Megnyitáskor terminálba a következöket írjuk be:
+
+   ```npm i```  
   
    ```npm i react-bootstrap```  
 
@@ -18,7 +18,7 @@ git bash-ben/ vagy powershell-ben: ```git clone https://github.com/Majkkrem/Petv
 
    ```npm i -D react-router-dom```
   
-  	Elindítani: ```npm run dev```
+  	Az elindításhoz: ```npm run dev```
     
 ### •	Petville_Backend
 
