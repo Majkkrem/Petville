@@ -35,17 +35,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     console.log('Bejelentkezés:', email);
-    setIsAuthenticated(true);
-    const response = await api.post<User>("/auth/loginWeb", JSON.stringify({ email, password }) );
-    console.log(response.data.id);
-    setUserId(response.data.id);
-    navigate('/user');
+    try {
+      const response = await api.post<User>("/auth/loginWeb", JSON.stringify({ email, password }) );
+      console.log(response.data.id);
+      setUserId(response.data.id);
+      setIsAuthenticated(true);
+      navigate('/user');
+    }catch (error) {
+      console.error('Hiba a bejelentkezés során:', error);
+    }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('isAuthenticated');
-    navigate('/');
+  const logout = async () => {
+    try {
+      await api.post("/auth/check");
+      const response = await api.post("/auth/logout");
+      setUserId(null);
+      setIsAuthenticated(false);
+      navigate('/');
+    }catch (error) {
+      console.error('Hiba a kijelentkezes során:', error);
+    }
   };
 
   React.useEffect(() => {
@@ -69,9 +79,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
-
-
-// sutik -> utana kell nezni
-// user html, user tabla feltoltese (fetch), footer, css, logout gomb
-// ne lepjen ki ha frissitunk az oldalra

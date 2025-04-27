@@ -8,6 +8,7 @@ import { PrismaService } from './prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { InventoriesModule } from './inventories/inventories.module';
+import { LoadModule } from './load/load.module';
 
 @Module({
 
@@ -15,7 +16,8 @@ import { InventoriesModule } from './inventories/inventories.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    InventoriesModule
+    InventoriesModule,
+    LoadModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
