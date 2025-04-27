@@ -10,13 +10,15 @@ git bash-ben/ vagy powershell-ben: ```git clone https://github.com/Majkkrem/Petv
 
   o	Megnyitáskor terminálba ```npm i```  
   
-  	Majd ```npm i react-bootstrap```  
+  	Majd:
+  
+   ```npm i react-bootstrap```  
 
-  ```npm i -D react-router-dom```
-    
-  	És ```npm i bootstrap```  
-    
-   	Elindítani ```npm run dev```
+   ```npm i bootstrap``` 
+
+   ```npm i -D react-router-dom```
+  
+  	Elindítani: ```npm run dev```
     
 ### •	Petville_Backend
 
