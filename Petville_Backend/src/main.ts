@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -16,6 +17,7 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('Warehouse')
