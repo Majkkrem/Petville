@@ -1,6 +1,6 @@
-import "../HomaPage.css";
+import "../HomePage.css";
 import CustomFooter from "./CustomFooter";
-import CustomNavbar from "./HomePageNav";
+import CustomNavbar from "./CustomNav";
 
 function HomePage() {
   return (
@@ -17,24 +17,26 @@ function HomePage() {
                 <br />
                 <p id="about-game">
                   <i>About the game</i> <br />
-                  PetVille is a free game similar to Pou or Tamagotchi. <br />
-                  You can choose a virtual pet like a dog, a cat, a bunny, or a bird. <br /> <br />
+                  PetVille is a free to play game, what is similar to Pou or Tamagotchi. 
+                  In this game you can own a virtual pet like a dog, a cat, a bunny or a frog, but also you can own more pets at the same time. <br/> <br/>
 
-                  You have to take care of your chosen pet, because it can get hungry, thirsty, sick, tired, or bored. <br />
+                  You have to take care of your choosen pet or pets, because it can get hungry, tired, bored or sick. <br/>
                   During the game, if all of the bars are low, your pet will be very sick and the game will be over, which
-                  means you have to start over the game and all the progress will be lost. <br /> <br />
+                  means you have to start over the game and all the progress will be lost. <br/> <br/>
 
                   <i>About the bars</i> <br />
                   The energy bar will be low if your pet is tired. You can increase the energy bar by sending your pet to
-                  sleep in the bedroom or giving them an energy bar in the kitchen. <br />
-                  The food and thirst bar will be low if your pet is hungry or thirsty. You can increase the food bar and
-                  the thirst bar by giving them different types of foods and drinks in the kitchen. <br />
+                  sleep in the bedroom or giving them energy bars in the kitchen. <br/>
+                  The food bar will be low if your pet is hungry. You can increase the food bar by giving them different types of foods in the kitchen. <br/>
                   The health bar will be low if your pet is feeling sick. You can increase the health bar by giving them
                   medicine in the kitchen. <br />
-                  The mood bar will be low if your pet is bored. You can increase the mood bar by playing with your pet in
-                  the playground. <br />
-                  <br />
-                  The game is available for PC and Android.
+                  The mood bar will be low if your pet is bored. You can increase the mood bar by playing mini games in the playground where you can also earn coins. <br /><br/>
+
+                  <i>Coins</i> <br />
+                  You can earn coins by playing mini games in the playground. You can spend the coins in the shop, where you can buy different types of foods, potion and energy bars. <br/><br/>
+                  At the moment the game is available only for PC.
+
+                  
                 </p>
               </section>
 
@@ -48,9 +50,6 @@ function HomePage() {
                 <br />
                 <p id="download_text">Click the button to download the game for PC</p>
                 <button id="download_button" className="btn btn-primary">Download</button>
-                <br /> <br />
-                <p id="download_text2">Click the button to download for Android</p>
-                <button id="download_button2" className="btn btn-primary">Download</button>
               </section>
 
               <section id="leaderboard" className="mb-4">

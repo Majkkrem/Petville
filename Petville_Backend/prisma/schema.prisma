@@ -24,6 +24,8 @@ model Users {
   role        Role          @default(USER)
 
   Inventory Inventory[]
+
+  Load Load[]
 }
 
 model Leaderboard {
@@ -47,6 +49,7 @@ model Save_files {
   currentGold Int
   user        Users  @relation(fields: [user_id], references: [id])
   inventory   Inventory @relation(fields: [id], references: [id])
+  load       Load?
 }
 
 model Inventory {
@@ -57,6 +60,24 @@ model Inventory {
   currentEnergyBar Int
   user             Users       @relation(fields: [user_id], references: [id])
   save_file        Save_files? @relation
+  load          Load? @relation
+}
+
+model Load{
+  id          Int    @id @default(autoincrement())
+  user_id     Int
+  petName     String
+  petType     String
+  petEnergy   Int
+  petHunger   Int
+  petMood     Int
+  petHealth   Int
+  hoursPlayer Int
+  goldEarned  Int
+  currentGold Int
+  user        Users @relation(fields: [user_id], references: [id])
+  inventory   Inventory @relation(fields: [id], references: [id], map: "Load_Inventory_id_fkey")
+  save_file Save_files @relation(fields: [id], references: [id], map: "Load_SaveFiles_id_fkey")
 }
 
 

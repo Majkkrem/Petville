@@ -52,6 +52,7 @@ export class AuthController {
     try {
       payload = await this.authService.loginWeb(loginDto);
     } catch (e) {
+      console.log(e);
       throw new UnauthorizedException('Invalid email or password');
     }
     const { access_token, refresh_token } = await this.authService.generateTokens(payload);
@@ -111,6 +112,7 @@ export class AuthController {
   @Post('check')
   async check(@Req() req: Request, @Res() res: Response) {
     const access_token = req.cookies?.access_token;
+
     if (!access_token) {
       throw new UnauthorizedException('No access token');
     }
