@@ -27,7 +27,6 @@ public class HopperGame extends JPanel implements ActionListener, KeyListener {
     setFocusable(true);
   }
 
-
   // Game states
   enum GameState { START, PLAYING, GAME_OVER }
   GameState gameState = GameState.START;
@@ -189,7 +188,8 @@ public class HopperGame extends JPanel implements ActionListener, KeyListener {
     g.setFont(new Font("Monospace", Font.PLAIN, 20));
     g.drawString("Score: " + score, WIDTH / 2 - 40, HEIGHT / 2);
     g.drawString("High Score: " + highScore, WIDTH / 2 - 50, HEIGHT / 2 + 30);
-    g.drawString("Press R to restart", WIDTH / 2 - 80, HEIGHT / 2 + 70);
+    g.drawString("Mood +" + (score * 2), WIDTH / 2 - 40, HEIGHT / 2 + 60);
+    g.drawString("Press R to restart", WIDTH / 2 - 80, HEIGHT / 2 + 90);
   }
 
   @Override
@@ -250,19 +250,28 @@ public class HopperGame extends JPanel implements ActionListener, KeyListener {
       if (enemy.x < playerX + playerSize &&
           enemy.x + enemy.width > playerX &&
           playerY < enemy.y + enemy.height &&
-          playerY + playerSize > enemy.y) {
+          playerY + playerSize > enemy.y)
+      {
         gameState = GameState.GAME_OVER;
-        stopGameTimer();  // Stop game timer and reward coins
+        stopGameTimer();
+        int coinsEarned = score;
+        int moodBoost = score * 2;
         SwingUtilities.invokeLater(() -> {
-          int coinsEarned = score;
           if (screenFactory != null) {
+            // Add coins and mood boost
             screenFactory.addGold(coinsEarned);
+            screenFactory.addMood(moodBoost);
+
+            JOptionPane.showMessageDialog(this,
+                "Game Over! You earned " + coinsEarned + " coins and your pet's mood increased by " + moodBoost + "!",
+                "Game Over",
+                JOptionPane.INFORMATION_MESSAGE);
+          } else {
+            JOptionPane.showMessageDialog(this,
+                "Game Over! You earned " + coinsEarned + " coins!",
+                "Game Over",
+                JOptionPane.INFORMATION_MESSAGE);
           }
-          JOptionPane.showMessageDialog(this,
-              "Game Over! You earned " + coinsEarned + " coins!",
-              "Game Over",
-              JOptionPane.INFORMATION_MESSAGE);
-          // Removed the window disposal code
         });
       }
 
