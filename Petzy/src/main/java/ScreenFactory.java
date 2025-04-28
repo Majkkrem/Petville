@@ -66,8 +66,41 @@ public class ScreenFactory {
     if (animal.getMood() == 0) {
       animal.setHealth(Math.max(0, animal.getHealth() - 5));
     }
+
+    // Check for energy depletion
+    if (animal.getEnergy() <= 0 && !isSleeping) {
+      SwingUtilities.invokeLater(() -> {
+        int response = JOptionPane.showConfirmDialog(
+            frame,
+            "Your pet is completely exhausted! Would you like to go to the bedroom to rest?",
+            "Energy Depleted",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (response == JOptionPane.YES_OPTION) {
+          cardLayout.show(cardPanel, "Bedroom");
+          if (sleepButton != null) {
+            sleepButton.doClick(); // Automatically put to sleep
+          }
+        }
+      });
+    }
+
+    // Check for health depletion
+    if (animal.getHealth() <= 0) {
+      SwingUtilities.invokeLater(() -> {
+        JOptionPane.showMessageDialog(
+            frame,
+            "Your pet's health has reached critical levels! Please take better care of your pet!",
+            "Health Warning",
+            JOptionPane.WARNING_MESSAGE
+        );
+      });
+    }
   }
 
+  
   public void setGameActive(boolean active) {
     this.gameActive = active;
     if (!active) {
@@ -144,7 +177,7 @@ public class ScreenFactory {
     animalImageLabel = new JLabel();
     try {
       ImageIcon animalIcon = new ImageIcon(getClass().getResource("icons/" + animal.getClass().getSimpleName() + ".png"));
-      Image scaledAnimal = animalIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+      Image scaledAnimal = animalIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
       animalImageLabel.setIcon(new ImageIcon(scaledAnimal));
     } catch (Exception e) {
       System.err.println("Error loading animal image: " + animal.getClass().getSimpleName() + ".png");
@@ -163,7 +196,7 @@ public class ScreenFactory {
       animalImageLabel = new JLabel();
       try {
         ImageIcon animalIcon = new ImageIcon(getClass().getResource("icons/" + animal.getClass().getSimpleName() + ".png"));
-        Image scaledAnimal = animalIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+        Image scaledAnimal = animalIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
         animalImageLabel.setIcon(new ImageIcon(scaledAnimal));
       } catch (Exception e) {
         System.err.println("Error loading animal image: " + animal.getClass().getSimpleName() + ".png");
