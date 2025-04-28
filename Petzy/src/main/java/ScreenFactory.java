@@ -1,4 +1,6 @@
 import Animals.Animal;
+import Database.GameClient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -23,6 +25,13 @@ public class ScreenFactory {
   private boolean gameActive = false;
   private Timer statsTimer;
   private JLabel animalImageLabel;
+  public Map<String, Integer> getInventory() {
+    return inventory;
+  }
+
+  public int getCoins() {
+    return coins;
+  }
 
   public enum Lables {
     ENERGY, HUNGER, HEALTH, MOOD
@@ -43,8 +52,17 @@ public class ScreenFactory {
     this.cardPanel = cardPanel;
     this.cardLayout = cardLayout;
     this.overlayBars = new HashMap<>();
-    initializeInventory();
+
+    this.coins = GameClient.loadCoins();
+    Map<String, Integer> loadedInventory = GameClient.loadInventoryData();
+    if (loadedInventory != null) {
+      this.inventory.putAll(loadedInventory);
+    } else {
+      initializeInventory();
+    }
+
     startStatsDecreaseTimer();
+    updateAllScreens();
   }
 
   private void startStatsDecreaseTimer() {
@@ -190,6 +208,14 @@ public class ScreenFactory {
       animalImageLabel.setIcon(new ImageIcon(scaledAnimal));
     } catch (Exception e) {
       System.err.println("Error loading animal image: " + animal.getClass().getSimpleName() + ".png");
+      // Fallback to default image
+      try {
+        ImageIcon defaultIcon = new ImageIcon(getClass().getResource("icons/Pet.png"));
+        Image scaledDefault = defaultIcon.getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH);
+        animalImageLabel.setIcon(new ImageIcon(scaledDefault));
+      } catch (Exception ex) {
+        System.err.println("Error loading default pet image");
+      }
     }
     animalImageLabel.setHorizontalAlignment(JLabel.CENTER);
 

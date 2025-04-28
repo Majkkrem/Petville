@@ -15,9 +15,13 @@ public class GameWindow {
   private Timer gameTimer;
   private ScreenFactory screenFactory;
 
-  public GameWindow(Animal animal) {
-    this.animal = animal;
-    if (animal.getEnergy() <= 0) {
+  public GameWindow(Animal animal, String username, String petName, String petType) {
+    this.animal = GameClient.loadGameData(username, petName, petType);
+    if (this.animal == null) {
+      this.animal = animal; // Use new animal if no save exists
+    }
+
+    if (this.animal.getEnergy() <= 0) {
       SwingUtilities.invokeLater(() -> showEnergyAlert());
     }
     initialize();
@@ -32,6 +36,7 @@ public class GameWindow {
     CardLayout cardLayout = new CardLayout();
     JPanel cardPanel = new JPanel(cardLayout);
 
+    // Átadjuk a betöltött vagy új állatot a ScreenFactory-nak
     screenFactory = new ScreenFactory(frame, animal, cardPanel, cardLayout);
 
     cardPanel.add(screenFactory.createPlayGroundScreen(), "Playground");
@@ -77,7 +82,7 @@ public class GameWindow {
   private JMenuBar createMenuBar() {
     JMenuBar menuBar = new JMenuBar();
 
-    JMenu gameMenu = new JMenu("Game");
+    JMenu gameMenu = new JMenu("Menu");
     JMenuItem saveItem = new JMenuItem("Save");
     JMenuItem mainMenuItem = new JMenuItem("Return to Main Menu");
     JMenuItem exitItem = new JMenuItem("Exit");
@@ -97,12 +102,30 @@ public class GameWindow {
   }
 
   private void saveGame() {
-    boolean saved = GameClient.saveGameData(animal);
-    // Uncomment if you want to show save confirmation
-    // String message = saved ? "Game saved successfully!" : "Failed to save game!";
-    // JOptionPane.showMessageDialog(frame, message);
-  }
+    String username = GameClient.getCurrentUser();
+    String petName = animal.getName();
+    String petType = animal.getClass().getSimpleName();
 
+    boolean animalSaved = GameClient.saveGameData(
+        username,
+        petName,
+        petType,
+        animal,
+        screenFactory.getCoins()
+    );
+    GameClient.saveInventoryData(
+        username,
+        petName,
+        petType,
+        screenFactory.getInventory()
+    );
+
+    if (animalSaved) {
+      JOptionPane.showMessageDialog(frame, "Game saved successfully!");
+    } else {
+      JOptionPane.showMessageDialog(frame, "Failed to save game!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+  }
   private void exitGame() {
     frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
   }

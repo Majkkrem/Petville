@@ -2,10 +2,12 @@ import Animals.*;
 import Database.GameClient;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import javax.imageio.ImageIO;
 import javax.swing.border.Border;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MainMenu {
   private JFrame frame;
@@ -213,6 +215,7 @@ public class MainMenu {
   private void startGame() {
     String playerName = playerNameField.getText().trim();
     String petName = petNameField.getText().trim();
+    String selectedAnimal = (String) animalSelector.getSelectedItem();
 
     if (playerName.isEmpty() || petName.isEmpty()) {
       JOptionPane.showMessageDialog(frame,
@@ -222,25 +225,47 @@ public class MainMenu {
       return;
     }
 
-    String selectedAnimal = (String) animalSelector.getSelectedItem();
-    Animal chosenAnimal;
+    // Check for existing save
+    Path savePath = Paths.get(GameClient.SAVE_DIR, playerName + "_" + petName + "_" + selectedAnimal + ".json");
+    if (Files.exists(savePath)) {
+      int response = JOptionPane.showConfirmDialog(
+          frame,
+          String.format("Found save files for \"%s\" (%s) for user \"%s\". Do you wish to continue?",
+              petName, selectedAnimal, playerName),
+          "Existing Save Found",
+          JOptionPane.YES_NO_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
 
-    // Java 11 compatible switch statement
-    switch (selectedAnimal) {
-      case "Cat":
-        chosenAnimal = new Cat(petName);
-        break;
-      case "Frog":
-        chosenAnimal = new Frog(petName);
-        break;
-      case "Bee":
-        chosenAnimal = new Bee(petName);
-        break;
-      default: // Dog is default
-        chosenAnimal = new Dog(petName);
-        break;
+      if (response != JOptionPane.YES_OPTION) {
+        // User wants to start new, delete existing save
+        try {
+          Files.deleteIfExists(savePath);
+          Files.deleteIfExists(Paths.get(GameClient.SAVE_DIR, playerName + "_" + petName + "_" + selectedAnimal + "_inventory.json"));
+        } catch (IOException e) {
+          System.err.println("Error deleting save files: " + e.getMessage());
+        }
+      }
     }
 
-    frame.dispose();
-    new GameWindow(chosenAnimal);
-  }}
+    if (GameClient.login(playerName, new String(passwordField.getPassword()))) {
+      Animal chosenAnimal;
+      switch (selectedAnimal) {
+        case "Cat":
+          chosenAnimal = new Cat(petName);
+          break;
+        case "Frog":
+          chosenAnimal = new Frog(petName);
+          break;
+        case "Bee":
+          chosenAnimal = new Bee(petName);
+          break;
+        default: // Dog
+          chosenAnimal = new Dog(petName);
+          break;
+      }
+
+      frame.dispose();
+      new GameWindow(chosenAnimal, playerName, petName, selectedAnimal);
+    }
+  }
+}
