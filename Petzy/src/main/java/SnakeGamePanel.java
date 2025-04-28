@@ -1,3 +1,5 @@
+import Animals.Animal;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -158,13 +160,24 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
   private void showGameOverMessage() {
     SwingUtilities.invokeLater(() -> {
       int coinsEarned = applesEaten;
+      int moodBoost = applesEaten * 2; // Calculate mood boost
+
       if (parentFrame != null && parentFrame.getScreenFactory() != null) {
-        parentFrame.getScreenFactory().addGold(coinsEarned);
+        ScreenFactory screenFactory = parentFrame.getScreenFactory();
+        screenFactory.addGold(coinsEarned);
+
+        // Update pet's mood
+        Animal animal = screenFactory.getAnimal();
+        int newMood = Math.min(100, animal.getMood() + moodBoost);
+        animal.setMood(newMood);
+
+        // Update all screens to reflect changes
+        screenFactory.updateAllScreens();
       }
 
       JOptionPane.showMessageDialog(
           this,
-          "Game Over! You earned " + coinsEarned + " coins!",
+          "Game Over! You earned " + coinsEarned + " coins and your pet's mood increased by " + moodBoost + "!",
           "Game Over",
           JOptionPane.INFORMATION_MESSAGE
       );
@@ -174,7 +187,8 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
   private void showCoinsEarned() {
     SwingUtilities.invokeLater(() -> {
       int coinsEarned = applesEaten;
-      String message = "Game Over!\n\nYou earned " + coinsEarned + " coins!";
+      int moodBoost = applesEaten * 2;
+      String message = "Game Over!\n\nYou earned " + coinsEarned + " coins!\nYour pet's mood increased by " + moodBoost + "!";
 
       // Create custom panel for better message display
       JPanel panel = new JPanel(new BorderLayout(10, 10));

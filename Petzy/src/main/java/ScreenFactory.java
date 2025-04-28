@@ -28,6 +28,15 @@ public class ScreenFactory {
     ENERGY, HUNGER, HEALTH, MOOD
   }
 
+  public Animal getAnimal() {
+    return animal;
+  }
+
+  public void addMood(int amount) {
+    animal.setMood(Math.min(100, animal.getMood() + amount));
+    updateAllScreens();
+  }
+
   public ScreenFactory(JFrame frame, Animal animal, JPanel cardPanel, CardLayout cardLayout) {
     this.frame = frame;
     this.animal = animal;
@@ -235,7 +244,7 @@ public class ScreenFactory {
         setGameActive(true);
         new SnakeGameFrame(this);
       });
-      JButton hopperGameButton = createStyledButton("Jump Game");
+      JButton hopperGameButton = createStyledButton("Hopper Game");
       hopperGameButton.addActionListener(e -> {
         setGameActive(true);
         new HopperFrame(this);
