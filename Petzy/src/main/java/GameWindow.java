@@ -47,7 +47,6 @@ public class GameWindow {
   }
 
   private void showEnergyAlert() {
-    // Get references to the card components from the frame
     BorderLayout layout = (BorderLayout) frame.getContentPane().getLayout();
     JPanel cardPanel = (JPanel) layout.getLayoutComponent(BorderLayout.CENTER);
     CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
@@ -61,10 +60,7 @@ public class GameWindow {
     );
 
     if (response == JOptionPane.YES_OPTION) {
-      // Switch to Bedroom screen
       cardLayout.show(cardPanel, "Bedroom");
-
-      // Automatically click the Sleep button if available
       if (screenFactory != null && screenFactory.getSleepButton() != null) {
         screenFactory.getSleepButton().doClick();
       }
@@ -83,12 +79,16 @@ public class GameWindow {
 
     JMenu gameMenu = new JMenu("Game");
     JMenuItem saveItem = new JMenuItem("Save");
+    JMenuItem mainMenuItem = new JMenuItem("Return to Main Menu");
     JMenuItem exitItem = new JMenuItem("Exit");
 
     saveItem.addActionListener(e -> saveGame());
+    mainMenuItem.addActionListener(e -> returnToMainMenu());
     exitItem.addActionListener(e -> exitGame());
 
     gameMenu.add(saveItem);
+    gameMenu.addSeparator();
+    gameMenu.add(mainMenuItem);
     gameMenu.addSeparator();
     gameMenu.add(exitItem);
     menuBar.add(gameMenu);
@@ -98,13 +98,26 @@ public class GameWindow {
 
   private void saveGame() {
     boolean saved = GameClient.saveGameData(animal);
-//    boolean savedInventory = GameClient.saveInventoryData(animal);
-//    String message = saved ? "Game saved successfully!" : "Failed to save game!";
-//    JOptionPane.showMessageDialog(frame, message);
+    // Uncomment if you want to show save confirmation
+    // String message = saved ? "Game saved successfully!" : "Failed to save game!";
+    // JOptionPane.showMessageDialog(frame, message);
   }
 
   private void exitGame() {
     frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+  }
+
+  private void returnToMainMenu() {
+    // Save game before returning to main menu
+    saveGame();
+
+    // Close current window
+    frame.dispose();
+    stopGameTimer();
+    GameClient.logout();
+
+    // Open main menu
+    SwingUtilities.invokeLater(() -> new MainMenu());
   }
 
   private void setupAutoSave() {
@@ -121,7 +134,7 @@ public class GameWindow {
   private JPanel createNavigationPanel(JPanel cardPanel, CardLayout cardLayout) {
     JPanel panel = new JPanel(new BorderLayout());
 
-    // Previous button with arrow drawing
+    // Previous button
     JButton prevBtn = new JButton() {
       @Override
       protected void paintComponent(Graphics g) {
@@ -140,7 +153,7 @@ public class GameWindow {
       }
     };
 
-    // Next button with arrow drawing
+    // Next button
     JButton nextBtn = new JButton("") {
       @Override
       protected void paintComponent(Graphics g) {
