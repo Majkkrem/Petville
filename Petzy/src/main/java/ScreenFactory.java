@@ -256,8 +256,8 @@ public class ScreenFactory {
       buttonPanel.setLayout(new BorderLayout());
       JPanel rightButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 0));
       rightButtonPanel.setOpaque(false);
-      rightButtonPanel.add(createImageButton("icons/Coin.png", e -> openShop(), 100, 100));
-      rightButtonPanel.add(createImageButton("icons/InvButton.png", e -> openInventory(), 100, 100));
+      rightButtonPanel.add(createImageButton("icons/Shop_icon.png", e -> openShop(), 100, 100));
+      rightButtonPanel.add(createImageButton("icons/Inventory_icon.png", e -> openInventory(), 100, 100));
       buttonPanel.add(rightButtonPanel, BorderLayout.EAST);
       buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 20)); // Some right margin
     } else if (screenName.equals("Bedroom")) {
@@ -526,7 +526,7 @@ public class ScreenFactory {
     itemsPanel.setOpaque(false);
 
     String[] items = {"Health Potion", "Chocolate Doughnut", "Burrito", "Pink Doughnut", "Medium Energy", "Large Energy"};
-    String[] imagePaths = {"Poti.png", "Chocolate-doughnut.png", "Burrito.png", "Pink-doughnut.png", "Medium-energy.png", "Large-energy.png"};
+    String[] imagePaths = {"Poti.png", "Chocolate-doughnut.png", "Burrito.png", "Pink-doughnut.png", "EnergyBar_big.png", "EnergyBar_small.png"};
     int[] prices = {50, 10, 20, 12, 25, 75};
 
     for (int i = 0; i < items.length; i++) {

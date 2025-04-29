@@ -8,7 +8,7 @@ public class SnakeGameFrame extends JFrame {
 
   public SnakeGameFrame(ScreenFactory screenFactory) {
     this.screenFactory = screenFactory;
-    this.screenFactory.setGameActive(true); // Jelzés, hogy játék aktív
+    this.screenFactory.setGameActive(true);
     initialize();
   }
 
@@ -39,7 +39,7 @@ public class SnakeGameFrame extends JFrame {
 
   private void closeGame() {
     snakeGamePanel.stopGame();
-    screenFactory.setGameActive(false); // Jelzés, hogy játék véget ért
+    screenFactory.setGameActive(false);
   }
 
   public ScreenFactory getScreenFactory() {

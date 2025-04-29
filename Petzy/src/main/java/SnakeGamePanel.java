@@ -184,100 +184,136 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
     });
   }
 
-  private void showCoinsEarned() {
-    SwingUtilities.invokeLater(() -> {
-      int coinsEarned = applesEaten;
-      int moodBoost = applesEaten * 2;
-      String message = "Game Over!\n\nYou earned " + coinsEarned + " coins!\nYour pet's mood increased by " + moodBoost + "!";
-
-      // Create custom panel for better message display
-      JPanel panel = new JPanel(new BorderLayout(10, 10));
-      panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-      // Add icon
-      ImageIcon coinIcon = new ImageIcon(getClass().getResource("/icons/coin.png")); // Make sure you have this icon
-      if (coinIcon == null) {
-        // Fallback if icon not found
-        coinIcon = new ImageIcon(); // Empty icon
-      }
-
-      // Message label
-      JLabel messageLabel = new JLabel(message);
-      messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
-      // Button panel
-      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
-
-      // Restart button
-      JButton restartButton = new JButton("Play Again");
-      restartButton.addActionListener(e -> {
-        Window window = SwingUtilities.getWindowAncestor(panel);
-        if (window != null) {
-          window.dispose();
-        }
-        resetGame();
-      });
-
-      // Exit button
-      JButton exitButton = new JButton("Exit");
-      exitButton.addActionListener(e -> {
-        Window window = SwingUtilities.getWindowAncestor(panel);
-        if (window != null) {
-          window.dispose();
-        }
-        exitGame();
-      });
-
-      buttonPanel.add(restartButton);
-      buttonPanel.add(exitButton);
-
-      panel.add(new JLabel(coinIcon), BorderLayout.WEST);
-      panel.add(messageLabel, BorderLayout.CENTER);
-      panel.add(buttonPanel, BorderLayout.SOUTH);
-
-      // Show the custom dialog
-      JOptionPane.showMessageDialog(
-          this,
-          panel,
-          "Game Over",
-          JOptionPane.PLAIN_MESSAGE
-      );
-    });
-  }
+//  private void showCoinsEarned() {
+//    SwingUtilities.invokeLater(() -> {
+//      int coinsEarned = applesEaten;
+//      int moodBoost = applesEaten * 2;
+//      String message = "Game Over!\n\nYou earned " + coinsEarned + " coins!\nYour pet's mood increased by " + moodBoost + "!";
+//
+//      // Create custom panel for better message display
+//      JPanel panel = new JPanel(new BorderLayout(10, 10));
+//      panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//
+//      // Add icon
+//      ImageIcon coinIcon = new ImageIcon(getClass().getResource("/icons/coin.png")); // Make sure you have this icon
+//      if (coinIcon == null) {
+//        // Fallback if icon not found
+//        coinIcon = new ImageIcon(); // Empty icon
+//      }
+//
+//      // Message label
+//      JLabel messageLabel = new JLabel(message);
+//      messageLabel.setFont(new Font("Arial", Font.BOLD, 16));
+//
+//      // Button panel
+//      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+//
+//      // Restart button
+//      JButton restartButton = new JButton("Play Again");
+//      restartButton.addActionListener(e -> {
+//        Window window = SwingUtilities.getWindowAncestor(panel);
+//        if (window != null) {
+//          window.dispose();
+//        }
+//        resetGame();
+//      });
+//
+//      // Exit button
+//      JButton exitButton = new JButton("Exit");
+//      exitButton.addActionListener(e -> {
+//        Window window = SwingUtilities.getWindowAncestor(panel);
+//        if (window != null) {
+//          window.dispose();
+//        }
+//        exitGame();
+//      });
+//
+//      buttonPanel.add(restartButton);
+//      buttonPanel.add(exitButton);
+//
+//      panel.add(new JLabel(coinIcon), BorderLayout.WEST);
+//      panel.add(messageLabel, BorderLayout.CENTER);
+//      panel.add(buttonPanel, BorderLayout.SOUTH);
+//
+//      // Show the custom dialog
+//      JOptionPane.showMessageDialog(
+//          this,
+//          panel,
+//          "Game Over",
+//          JOptionPane.PLAIN_MESSAGE
+//      );
+//    });
+//  }
 
   private void gameOver(Graphics g) {
-    // Dark overlay
-    g.setColor(new Color(0, 0, 0, 150));
+    // Dark semi-transparent overlay
+    g.setColor(new Color(0, 0, 0, 180));
     g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // Game Over text with shadow
-    g.setColor(Color.BLACK);
+    // Cast to Graphics2D for better rendering
+    Graphics2D g2d = (Graphics2D) g;
+    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+    // Game Over text (moved higher by changing Y position from -50 to -80)
+    String gameOverText = "GAME OVER";
     g.setFont(new Font("Monospace", Font.BOLD, 75));
-    FontMetrics metrics = getFontMetrics(g.getFont());
-    g.drawString("Game Over",
-        (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2 + 5,
-        SCREEN_HEIGHT/2 - 50);
+    FontMetrics metrics = g.getFontMetrics();
 
-    g.setColor(new Color(255, 100, 100));
-    g.drawString("Game Over",
-        (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2,
-        SCREEN_HEIGHT/2 - 55);
+    // Calculate centered positions
+    int gameOverX = (SCREEN_WIDTH - metrics.stringWidth(gameOverText)) / 2;
+    int gameOverY = SCREEN_HEIGHT / 2 - 80;  // Changed from -50 to -80 to move higher
 
-    // Score text
-    g.setColor(Color.WHITE);
+    // Text shadow
+    g.setColor(new Color(50, 50, 50));
+    g.drawString(gameOverText, gameOverX + 3, gameOverY + 3);
+
+    // Main text with gradient
+    GradientPaint textGradient = new GradientPaint(
+        gameOverX, gameOverY, new Color(255, 80, 80),
+        gameOverX + metrics.stringWidth(gameOverText), gameOverY + 50, new Color(255, 180, 180));
+    g2d.setPaint(textGradient);
+    g2d.drawString(gameOverText, gameOverX, gameOverY);
+
+    // Score display
+    String scoreText = "SCORE: " + applesEaten;
     g.setFont(new Font("Monospace", Font.BOLD, 30));
-    g.drawString("Score: " + applesEaten,
-        (SCREEN_WIDTH - metrics.stringWidth("Score: " + applesEaten))/2,
-        SCREEN_HEIGHT/2 + 20);
+    metrics = g.getFontMetrics();
 
-    // Restart instructions
+    int scoreX = (SCREEN_WIDTH - metrics.stringWidth(scoreText)) / 2;
+    int scoreY = SCREEN_HEIGHT / 2 + 20;
+
+    // Score shadow
+    g.setColor(Color.BLACK);
+    g.drawString(scoreText, scoreX + 2, scoreY + 2);
+
+    // Score with gradient
+    GradientPaint scoreGradient = new GradientPaint(
+        scoreX, scoreY - 15, new Color(255, 255, 150),
+        scoreX + metrics.stringWidth(scoreText), scoreY + 15, Color.WHITE);
+    g2d.setPaint(scoreGradient);
+    g2d.drawString(scoreText, scoreX, scoreY);
+
+    // Instructions
+    g.setColor(new Color(200, 200, 255));
     g.setFont(new Font("Monospace", Font.PLAIN, 20));
-    g.drawString("Press R to restart",
-        (SCREEN_WIDTH - metrics.stringWidth("Press R to restart"))/2,
-        SCREEN_HEIGHT/2 + 70);
+    metrics = g.getFontMetrics();
+
+    String restartText = "Press [R] to Restart";
+    int restartX = (SCREEN_WIDTH - metrics.stringWidth(restartText)) / 2;
+    g.drawString(restartText, restartX, SCREEN_HEIGHT / 2 + 70);
+
+    String quitText = "Press [Q] to Quit";
+    int quitX = (SCREEN_WIDTH - metrics.stringWidth(quitText)) / 2;
+    g.drawString(quitText, quitX, SCREEN_HEIGHT / 2 + 100);
+
+    // Decorative border
+    g.setColor(new Color(255, 255, 255, 50));
+    int borderWidth = metrics.stringWidth(gameOverText) + 80;
+    int borderHeight = 220;
+    int borderX = (SCREEN_WIDTH - borderWidth) / 2;
+    int borderY = SCREEN_HEIGHT / 2 - 100;
+    g.drawRoundRect(borderX, borderY, borderWidth, borderHeight, 20, 20);
   }
-
-
   private void resetGame() {
     bodyParts = 6;
     applesEaten = 0;
@@ -361,7 +397,11 @@ public class SnakeGamePanel extends JPanel implements ActionListener {
             resetGame();
           }
           break;
+        case KeyEvent.VK_Q:
+          if (!running) {
+            exitGame();
+          }
+          break;
       }
     }
-  }
-}
+  }}
