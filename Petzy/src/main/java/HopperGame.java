@@ -266,11 +266,6 @@ public class HopperGame extends JPanel implements ActionListener, KeyListener {
                 "Game Over! You earned " + coinsEarned + " coins and your pet's mood increased by " + moodBoost + "!",
                 "Game Over",
                 JOptionPane.INFORMATION_MESSAGE);
-          } else {
-            JOptionPane.showMessageDialog(this,
-                "Game Over! You earned " + coinsEarned + " coins!",
-                "Game Over",
-                JOptionPane.INFORMATION_MESSAGE);
           }
         });
       }
