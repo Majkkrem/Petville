@@ -119,11 +119,19 @@ public class ScreenFactory {
       SwingUtilities.invokeLater(() -> {
         JOptionPane.showMessageDialog(
             frame,
-            "Your pet's health has reached critical levels! Please take better care of your pet!",
-            "Health Warning",
-            JOptionPane.WARNING_MESSAGE
+            "Your pet has died! You'll be returned to the main menu.",
+            "Pet Died",
+            JOptionPane.ERROR_MESSAGE
         );
+        // Return to main menu
+        frame.dispose();
+        new MainMenu();
       });
+      // Stop the timer to prevent further execution
+      if (statsTimer != null) {
+        statsTimer.cancel();
+        statsTimer = null;
+      }
     }
   }
 
@@ -428,6 +436,21 @@ public class ScreenFactory {
     if (canUse) {
       inventory.put(item, inventory.get(item) - 1);
       updateAllScreens();
+
+      // Check if health reached 0 after using item
+      if (animal.getHealth() <= 0) {
+        SwingUtilities.invokeLater(() -> {
+          JOptionPane.showMessageDialog(
+              frame,
+              "Your pet has died! You'll be returned to the main menu.",
+              "Pet Died",
+              JOptionPane.ERROR_MESSAGE
+          );
+          frame.dispose();
+          new MainMenu();
+        });
+        return;
+      }
     }
     JOptionPane.showMessageDialog(frame, message);
   }
@@ -472,7 +495,6 @@ public class ScreenFactory {
 
   public void addGold(int amount) {
     coins += amount;
-    JOptionPane.showMessageDialog(frame, "You earned " + amount + " coins!");
     updateAllScreens();
   }
 
