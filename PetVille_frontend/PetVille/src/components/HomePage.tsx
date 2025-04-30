@@ -30,12 +30,15 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const MEDIAFIRE_DOWNLOAD_URL = "https://www.mediafire.com/file/0iduwkfqcucfruu/Petville.exe/file";
+
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
         const response = await api.get<LeaderboardResponse[]>('/leaderboard');
         console.log(response.data);
-  
+
+
         const processedData: LeaderboardEntry[] = response.data
           .map(entry => ({
             name: entry.user.name || `Player ${entry.user_id}`,
@@ -50,7 +53,7 @@ function HomePage() {
             avatar: getAvatarByPetType(entry.petType)
           }))
           .slice(0, 5);
-  
+
         setLeaderboardData(processedData);
       } catch (err) {
         console.error('Error fetching leaderboard:', err);
@@ -59,7 +62,7 @@ function HomePage() {
         setLoading(false);
       }
     };
-  
+
     fetchLeaderboard();
   }, []);
 
@@ -96,31 +99,31 @@ function HomePage() {
                   <h1 className="game-title">PetVille</h1>
                   <p className="game-tagline">Your virtual pet adventure begins here!</p>
                 </div>
-                
+
                 <div className="about-section">
                   <h2 className="section-title">
                     <span className="title-icon">🐾</span> About the Game
                   </h2>
                   <div className="about-content">
                     <p>
-                      PetVille is a free-to-play virtual pet game where you can adopt and care for adorable pets 
+                      PetVille is a free-to-play virtual pet game where you can adopt and care for adorable pets
                       like dogs, cats, bees and frogs - and you can even own multiple pets at the same time!
-                       Manage their needs, play games, and build your perfect pet paradise!
+                      Manage their needs, play games, and build your perfect pet paradise!
                     </p>
-                    
+
                     <div className="feature-cards">
                       <div className="feature-card">
                         <div className="feature-icon">🦴</div>
                         <h3>Care for Pets</h3>
                         <p>Your goal is to take care of your chosen pet(s) by managing their needs, including hunger, energy, mood, and health.</p>
                       </div>
-                      
+
                       <div className="feature-card">
                         <div className="feature-icon">🎮</div>
                         <h3>Play Games</h3>
                         <p>Earn coins through fun mini-games in the playground</p>
                       </div>
-                      
+
                       <div className="feature-card">
                         <div className="feature-icon">🛍️</div>
                         <h3>Shop Items</h3>
@@ -183,10 +186,20 @@ function HomePage() {
                     <span className="title-icon">⬇️</span> Download Now
                   </h2>
                   <p>Join the PetVille adventure today!</p>
-                  <button className="download-btn">
-                    Download for PC
-                    <span className="download-icon">💾</span>
-                  </button>
+                  <a
+                    href={MEDIAFIRE_DOWNLOAD_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="download-btn-link"
+                  >
+                    <button className="download-btn">
+                      Download for PC
+                      <span className="download-icon">💾</span>
+                    </button>
+                  </a>
+                  <p className="download-note mt-2">
+                    <small>Windows 10/11 | ~50MB</small>
+                  </p>
                 </div>
               </section>
 
