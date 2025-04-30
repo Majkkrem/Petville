@@ -4,6 +4,8 @@ import Database.GameClient;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -192,10 +194,24 @@ public class ScreenFactory {
       protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         try {
-          Image bgImage = ImageIO.read(getClass().getResource(imagePath));
-          g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+          // Try multiple path variations
+          InputStream is = getClass().getResourceAsStream(imagePath.startsWith("/") ? imagePath : "/" + imagePath);
+          if (is == null) {
+            is = getClass().getResourceAsStream(imagePath.startsWith("/") ? imagePath.substring(1) : imagePath);
+          }
+
+          if (is != null) {
+            Image bgImage = ImageIO.read(is);
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+          } else {
+            throw new IOException("Image not found");
+          }
         } catch (IOException e) {
-          g.setColor(Color.LIGHT_GRAY);
+          // Fallback background color based on screen
+          Color bgColor = screenName.equals("Bedroom") ? new Color(50, 50, 80) :
+              screenName.equals("Kitchen") ? new Color(80, 50, 50) :
+                  new Color(50, 80, 50);
+          g.setColor(bgColor);
           g.fillRect(0, 0, getWidth(), getHeight());
         }
       }
@@ -308,22 +324,34 @@ public class ScreenFactory {
 
   private JButton createImageButton(String imagePath, ActionListener action, int width, int height) {
     try {
-      ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
-      Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-      JButton button = new JButton(new ImageIcon(scaledImage));
-      button.setBorderPainted(false);
-      button.setContentAreaFilled(false);
-      button.setFocusPainted(false);
-      button.addActionListener(action);
-      button.setPreferredSize(new Dimension(width, height));
-      return button;
+      // Try loading with exact path first
+      InputStream is = getClass().getResourceAsStream(imagePath.startsWith("/") ? imagePath : "/" + imagePath);
+      if (is == null) {
+        // Try without leading slash if first attempt fails
+        is = getClass().getResourceAsStream(imagePath.startsWith("/") ? imagePath.substring(1) : imagePath);
+      }
+
+      if (is != null) {
+        ImageIcon originalIcon = new ImageIcon(ImageIO.read(is));
+        Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        JButton button = new JButton(new ImageIcon(scaledImage));
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.addActionListener(action);
+        button.setPreferredSize(new Dimension(width, height));
+        return button;
+      }
     } catch (Exception e) {
       System.err.println("Error loading button image: " + imagePath);
-      JButton button = new JButton("Button");
-      button.addActionListener(action);
-      return button;
     }
+
+    // Fallback to text button
+    JButton button = new JButton("Button");
+    button.addActionListener(action);
+    return button;
   }
+
 
   private JPanel createStatsPanel(String screenName) {
     JPanel statsPanel = new JPanel(new GridLayout(1, 4, 10, 10));
@@ -337,19 +365,13 @@ public class ScreenFactory {
       statPanel.setOpaque(false);
       statPanel.setPreferredSize(new Dimension(150, 60));
 
-      try {
-        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/icons/" + labelType + ".png"));
-        Image scaledImage = originalIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-        JLabel iconLabel = new JLabel(new ImageIcon(scaledImage));
-        iconLabel.setPreferredSize(new Dimension(100, 100));
-        statPanel.add(iconLabel, BorderLayout.WEST);
-      } catch (Exception e) {
-        System.err.println("Error loading icon for: " + labelType);
-        JLabel textLabel = new JLabel(labelType.toString().substring(0, 1));
-        textLabel.setPreferredSize(new Dimension(32, 32));
-        statPanel.add(textLabel, BorderLayout.WEST);
-      }
+      // Load icon using the new method
+      ImageIcon icon = loadIconResource(labelType.toString(), 100, 100);
+      JLabel iconLabel = new JLabel(icon);
+      iconLabel.setPreferredSize(new Dimension(100, 100));
+      statPanel.add(iconLabel, BorderLayout.WEST);
 
+      // Progress bar setup (unchanged)
       JProgressBar progressBar = new JProgressBar(0, 100);
       progressBar.setValue(getStatValue(labelType));
       progressBar.setStringPainted(true);
@@ -371,6 +393,55 @@ public class ScreenFactory {
     overlayBars.put(screenName, progressBars);
     return statsPanel;
   }
+
+  private ImageIcon loadIconResource(String iconName, int width, int height) {
+    // Try multiple possible paths and cases
+    String[] possiblePaths = {
+        "/icons/" + iconName.toLowerCase() + ".png",
+        "/icons/" + iconName.toUpperCase() + ".png",
+        "/icons/" + iconName + ".png",
+        "icons/" + iconName.toLowerCase() + ".png",
+        "icons/" + iconName.toUpperCase() + ".png",
+        "icons/" + iconName + ".png"
+    };
+
+    for (String path : possiblePaths) {
+      try (InputStream is = getClass().getResourceAsStream(path)) {
+        if (is != null) {
+          ImageIcon icon = new ImageIcon(ImageIO.read(is));
+          return new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+        }
+      } catch (IOException e) {
+        System.err.println("Error loading icon from path: " + path);
+      }
+    }
+
+    // Fallback: create a colored circle icon
+    return createFallbackIcon(iconName, width, height);
+  }
+
+  private ImageIcon createFallbackIcon(String iconName, int width, int height) {
+    BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g2d = img.createGraphics();
+
+    // Set color based on icon type
+    if (iconName.equalsIgnoreCase("energy")) {
+      g2d.setColor(new Color(100, 200, 100)); // Green
+    } else if (iconName.equalsIgnoreCase("hunger")) {
+      g2d.setColor(new Color(200, 150, 50)); // Orange
+    } else if (iconName.equalsIgnoreCase("health")) {
+      g2d.setColor(new Color(200, 50, 50)); // Red
+    } else if (iconName.equalsIgnoreCase("mood")) {
+      g2d.setColor(new Color(100, 100, 200)); // Blue
+    } else {
+      g2d.setColor(Color.GRAY); // Default
+    }
+
+    g2d.fillOval(2, 2, width-4, height-4);
+    g2d.dispose();
+    return new ImageIcon(img);
+  }
+
 
   private int getStatValue(Lables labelType) {
     switch (labelType) {
