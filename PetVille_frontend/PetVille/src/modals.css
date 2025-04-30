@@ -1,0 +1,35 @@
+#modalHeader{
+    background-color: #7da4c4;
+}
+
+#modalBody{
+    background-color: #e5e9e8;
+}
+
+#modalFooter{
+    background-color: #7da4c4;
+}
+
+#loginEmail{
+    background-color: rgb(190, 190, 190);
+}
+
+#loginPassword{
+    background-color: rgb(190, 190, 190);
+
+}
+
+#registerUsername{
+    background-color: rgb(190, 190, 190);
+
+}
+
+#registerEmail{
+    background-color: rgb(190, 190, 190);
+
+}
+
+#registerPassword{
+    background-color: rgb(190, 190, 190);
+
+}
