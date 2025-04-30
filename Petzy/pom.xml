@@ -47,10 +47,6 @@
             <includes>
                 <include>fonts/PressStart2P-Regular.ttf</include>
                 <include>icons/*.png</include>
-                <include>icons/Energy.png</include>
-                <include>icons/Hunger.png</include>
-                <include>icons/Health.png</include>
-                <include>icons/Mood.png</include>
             </includes>
             <filtering>false</filtering>  <!-- Crucial for binary files -->
         </resource>
