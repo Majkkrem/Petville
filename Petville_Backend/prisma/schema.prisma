@@ -19,24 +19,23 @@ model Users {
   email       String        @unique
   password    String
   dateOfRegister DateTime @default(now())
-  Leaderboard Leaderboard[]
+  Leaderboard Leaderboard?
   Save_files  Save_files[]
   role        Role          @default(USER)
-
-  Inventory Inventory[]
-
-  Load Load[]
+  Inventory   Inventory[]
 }
 
 model Leaderboard {
-  id      Int   @id @default(autoincrement())
-  user_id Int
-  score   Int
-  user    Users @relation(fields: [user_id], references: [id])
+  id        Int        @id @default(autoincrement())
+  user_id   Int @unique
+  score     Int
+  user      Users      @relation(fields: [user_id], references: [id])
+  save_file Save_files @relation(fields: [save_file_id], references: [id])
+  save_file_id Int @unique
 }
 
 model Save_files {
-  id          Int    @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   user_id     Int
   petName     String
   petType     String
@@ -47,9 +46,9 @@ model Save_files {
   hoursPlayer Int
   goldEarned  Int
   currentGold Int
-  user        Users  @relation(fields: [user_id], references: [id])
-  inventory   Inventory @relation(fields: [id], references: [id])
-  load       Load?
+  user        Users         @relation(fields: [user_id], references: [id])
+  inventory   Inventory     @relation(fields: [id], references: [id])
+  leaderboard Leaderboard?
 }
 
 model Inventory {
@@ -60,25 +59,10 @@ model Inventory {
   currentEnergyBar Int
   user             Users       @relation(fields: [user_id], references: [id])
   save_file        Save_files? @relation
-  load          Load? @relation
+
 }
 
-model Load{
-  id          Int    @id @default(autoincrement())
-  user_id     Int
-  petName     String
-  petType     String
-  petEnergy   Int
-  petHunger   Int
-  petMood     Int
-  petHealth   Int
-  hoursPlayer Int
-  goldEarned  Int
-  currentGold Int
-  user        Users @relation(fields: [user_id], references: [id])
-  inventory   Inventory @relation(fields: [id], references: [id], map: "Load_Inventory_id_fkey")
-  save_file Save_files @relation(fields: [id], references: [id], map: "Load_SaveFiles_id_fkey")
-}
+
 
 
 enum Role {

@@ -1,7 +1,10 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Alert } from 'react-bootstrap';
 import RegisterModal from './RegisterModal';
 import { useAuth } from './AuthProvider';
+import { AxiosError } from 'axios';
+import '../modals.css';
+
 
 interface LoginModalProps {
   show: boolean;
@@ -14,6 +17,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ show, onHide, onShow }) => {
   const [registrationSuccess, setRegistrationSuccess] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState('');
   const { login } = useAuth();
 
   const handleRegistrationClick = () => {
@@ -40,6 +44,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ show, onHide, onShow }) => {
       onHide();
     } catch (error) {
       console.error('Login failed:', error);
+      if (error instanceof AxiosError) {
+        setError((error as AxiosError).response.data.message || 'Login failed. Please try again.');
+      } else {
+        setError('An unknown error occurred.');
+      }
     }
   };
 
@@ -59,11 +68,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ show, onHide, onShow }) => {
   return (
     <>
       <Modal show={show} onHide={onHide}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton id='modalHeader'>
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div className="mb-3">
+        <Modal.Body id='modalBody'>
+          <div className="mb-3" >
             <label htmlFor="email" className="form-label">Email:</label>
             <input 
               type="email" 
@@ -71,7 +80,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ show, onHide, onShow }) => {
               className="form-control" 
               placeholder="Enter email" 
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setError('');
+                setEmail(e.target.value);
+              }}
               required
             />
           </div>
@@ -83,7 +95,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ show, onHide, onShow }) => {
               className="form-control" 
               placeholder="Password" 
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setError('');
+                setPassword(e.target.value);
+              }}
               required
             />
           </div>
@@ -102,8 +117,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ show, onHide, onShow }) => {
               </a>
             </p>
           </div>
+          {error && (
+              <Alert variant="danger" className="mt-2">
+                {error}
+              </Alert>
+            )}
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer id='modalFooter'>
           <Button variant="secondary" onClick={onHide}>
             Close
           </Button>

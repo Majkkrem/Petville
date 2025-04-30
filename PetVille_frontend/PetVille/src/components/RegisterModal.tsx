@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Alert, Button, Form, Modal, Spinner } from 'react-bootstrap';
+import '../modals.css';
 
 interface RegisterModalProps {
   show: boolean;
@@ -20,18 +21,14 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
 
   const validatePassword = (pwd: string): boolean => {
     if (pwd.length < 8) {
-      setError('Password must be at least 8 characters long.');
       return false;
     }
     if (!/[A-Z]/.test(pwd)) {
-      setError('Password must contain at least one uppercase letter.');
       return false;
     }
     if (!/[0-9]/.test(pwd)) {
-      setError('Password must contain at least one number.');
       return false;
     }
-    setError('');
     return true;
   };
 
@@ -39,6 +36,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     e.preventDefault();
 
     if (!validatePassword(password)) {
+      setError('Password must contain: at least 8 characters, 1 uppercase letter and 1 number');
       return;
     }
 
@@ -60,7 +58,15 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       
       if (!response.ok) {
         if(response.status === 500) {
-          throw new Error('Email already exists');
+          throw new Error('Server error. Please try again later.');
+        }
+        if(response.status === 400) {
+          if(data.message === 'Users_name_key') {
+            throw new Error('Username already exists.');
+          }
+          else if(data.message === 'Users_email_key') {
+            throw new Error('Email already exists.');
+          }
         }
         throw new Error(data.message || 'Registration failed');
       }
@@ -78,18 +84,22 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
 
   return (
     <Modal show={show} onHide={onHide}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton id='modalHeader'>
         <Modal.Title>Registration</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body id='modalBody'>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email" 
+              id='registerEmail'
               placeholder="Enter email" 
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError('');
+              }}
               required
               disabled={isSubmitting}
             />
@@ -99,9 +109,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             <Form.Label>Username</Form.Label>
             <Form.Control 
               type="text" 
+              id='registerUsername'
               placeholder="Username" 
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                setError('');
+              }}
               required
               disabled={isSubmitting}
             />
@@ -114,36 +128,34 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             <Form.Label>Password</Form.Label>
             <Form.Control 
               type="password" 
+              id='registerPassword'
               placeholder="Password" 
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                validatePassword(e.target.value);
-              }}
+              onChange={(e) => setPassword(e.target.value)}
               required 
-              isInvalid={!!error}
               disabled={isSubmitting}
             />
-            {error && (
-              <Alert variant="danger" className="mt-2">
-                {error}
-              </Alert>
-            )}
             <Form.Text className="text-muted">
               Password must contain: at least 8 characters, 1 uppercase letter and 1 number
             </Form.Text>
           </Form.Group>
+          
+          {error && (
+            <Alert variant="danger" className="mt-3">
+              {error}
+            </Alert>
+          )}
         </Form>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer id='modalFooter'>
         <Button variant="secondary" onClick={onHide} disabled={isSubmitting}>
           Close
         </Button>
         <Button 
           variant="primary"
           type="submit"
-          disabled={!email || !name || !password || !!error || isSubmitting}
-          onClick={(e) => handleSubmit(e)}
+          disabled={!email || !name || !password || isSubmitting}
+          onClick={handleSubmit}
         >
           {isSubmitting ? (
             <>

@@ -1,5 +1,3 @@
-
-
 function CustomFooter(){
   return(
       <footer className="bg-dark py-3">
@@ -9,8 +7,3 @@ function CustomFooter(){
 }
 
 export default CustomFooter
-
-
-// teszt@teszt.hu
-// Teszt
-// TesztAjelszo11

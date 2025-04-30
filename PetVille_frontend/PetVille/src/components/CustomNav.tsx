@@ -17,7 +17,6 @@ const CustomNavbar: React.FC = () => {
     setShowLoginModal(false);
   };
 
-  // Oldalon belüli görgetés kezelése
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -29,11 +28,11 @@ const CustomNavbar: React.FC = () => {
     <>
       <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
         <Container fluid>
-          <Navbar.Brand 
-            onClick={() => navigate(isAuthenticated ? '/user' : '/')}
-            style={{ cursor: 'pointer' }}
-          >
-            PetVille
+          <Navbar.Brand>
+            <img src="./pictures/Logo.png" alt="Logo"
+            style={
+              { width: '50px', height: '50px' } 
+            } />
           </Navbar.Brand>
           
           <Navbar.Toggle aria-controls="main-navbar" />
@@ -41,7 +40,6 @@ const CustomNavbar: React.FC = () => {
           <Navbar.Collapse id="main-navbar">
             <Nav className="ms-auto">
               {isAuthenticated ? (
-                // BEJELENTKEZETT ÁLLAPOT
                 <>
                   <Nav.Link onClick={() => navigate('/home')}>Home</Nav.Link>
                   <Nav.Link onClick={() => navigate('/user')}>My profile</Nav.Link>
@@ -54,7 +52,6 @@ const CustomNavbar: React.FC = () => {
                   </Button>
                 </>
               ) : (
-                // NEM BEJELENTKEZETT ÁLLAPOT
                 <>
                   <Nav.Link onClick={() => scrollToSection('game-description')}>Home</Nav.Link>
                   <Nav.Link onClick={() => scrollToSection('pictures')}>Pictures</Nav.Link>

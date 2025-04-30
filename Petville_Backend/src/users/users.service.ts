@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,13 +10,23 @@ export class UsersService {
 
  async create(createUserDto: CreateUserDto) {
     const hashedPassword = await hash(createUserDto.password);
-    const newUser = await this.prisma.users.create({
-      data: {
-        ...createUserDto,
-        password: hashedPassword,
-      },
-    });
-    console.log(createUserDto);
+    let newUser;
+    try{
+      newUser = await this.prisma.users.create({
+        data: {
+          ...createUserDto,
+          password: hashedPassword,
+        },
+      });
+    }
+    catch (error) {
+      if (error.code === 'P2002') {
+        throw new BadRequestException(error.meta.target);
+      } else {
+        throw error;
+      }
+    }
+
     delete newUser.password;
     return newUser;
   }

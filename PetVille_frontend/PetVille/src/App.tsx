@@ -8,7 +8,6 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        {/* NAVBAR CSAK EGYSZER LESZ MEGJELENÍTVE */}
         <CustomNavbar />
         
         <Routes>

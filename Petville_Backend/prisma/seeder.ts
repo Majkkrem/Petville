@@ -1,87 +1,105 @@
-import { PrismaClient } from '@prisma/client';
+// seed.ts
 import { faker } from '@faker-js/faker';
-
+import { PrismaClient, Role, Users } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Create 10 regular users
-  for (let i = 0; i < 10; i++) {
+  // Clear existing data
+  await prisma.inventory.deleteMany();
+  await prisma.leaderboard.deleteMany();
+  await prisma.save_files.deleteMany();
+  await prisma.users.deleteMany();
+
+  // Create users
+  const users: Users[] = [];
+  for (let i = 0; i < 20; i++) {
     const user = await prisma.users.create({
       data: {
         name: faker.internet.userName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
-        role: 'USER',
+        role: i === 0 ? Role.ADMIN : Role.USER,
+        dateOfRegister: faker.date.past({ years: 1 }),
       },
     });
+    users.push(user);
+  }
 
-    // Create leaderboard entry for each user
+  // Create save files with inventory
+  const petTypes = ['dog', 'cat', 'bee', 'frog'];
+  
+  for (const user of users) {
+    // Create 1-3 save files per user
+    const saveCount = faker.number.int({ min: 1, max: 3 });
+    const saves: Array<{
+      id: number;
+      user_id: number;
+      petName: string;
+      petType: string;
+      petEnergy: number;
+      petHunger: number;
+      petMood: number;
+      petHealth: number;
+      hoursPlayer: number;
+      goldEarned: number;
+      currentGold: number;
+    }> = [];
+    
+    for (let i = 0; i < saveCount; i++) {
+      const goldEarned = faker.number.int({ min: 100, max: 5000 });
+      const save = await prisma.save_files.create({
+        data: {
+          user: {
+            connect: { id: user.id },
+          },
+          petName: faker.person.firstName(),
+          petType: faker.helpers.arrayElement(petTypes),
+          petEnergy: faker.number.int({ min: 20, max: 100 }),
+          petHunger: faker.number.int({ min: 20, max: 100 }),
+          petMood: faker.number.int({ min: 20, max: 100 }),
+          petHealth: faker.number.int({ min: 20, max: 100 }),
+          hoursPlayer: faker.number.int({ min: 1, max: 100 }),
+          goldEarned: goldEarned,
+          currentGold: faker.number.int({ 
+            min: Math.floor(goldEarned * 0.1), 
+            max: Math.floor(goldEarned * 0.9) 
+          }),
+          inventory: {
+            create: {
+              currentFood: faker.number.int({ min: 0, max: 20 }),
+              currentHeal: faker.number.int({ min: 0, max: 10 }),
+              currentEnergyBar: faker.number.int({ min: 0, max: 15 }),
+              user: {
+                connect: { id: user.id },
+              },
+            }
+          }
+        }
+      });
+      saves.push(save);
+    }
+
+    // Find the save with highest goldEarned
+    const highestGoldSave = saves.reduce((prev, current) => 
+      (prev.goldEarned > current.goldEarned) ? prev : current
+    );
+
+    // Create leaderboard entry linked to this save
     await prisma.leaderboard.create({
       data: {
         user_id: user.id,
-        score: faker.number.int({ min: 0, max: 10000 }),
-      },
+        score: highestGoldSave.goldEarned,
+        save_file_id: highestGoldSave.id
+      }
     });
-
-    // Create inventory for each user
-    const inventory = await prisma.inventory.create({
-      data: {
-        user_id: user.id,
-        currentFood: faker.number.int({ min: 0, max: 20 }),
-        currentHeal: faker.number.int({ min: 0, max: 10 }),
-        currentEnergyBar: faker.number.int({ min: 0, max: 5 }),
-      },
-    });
-
-    // Create save file for each user (50% chance)
-    if (faker.datatype.boolean()) {
-      await prisma.save_files.create({
-        data: {
-          user_id: user.id,
-          petName: faker.person.firstName(),
-          petType: faker.helpers.arrayElement(['Cat', 'Dog', 'Bird', 'Dragon', 'Unicorn']),
-          petEnergy: faker.number.int({ min: 0, max: 100 }),
-          petHunger: faker.number.int({ min: 0, max: 100 }),
-          petMood: faker.number.int({ min: 0, max: 100 }),
-          petHealth: faker.number.int({ min: 0, max: 100 }),
-          hoursPlayer: faker.number.int({ min: 0, max: 500 }),
-          goldEarned: faker.number.int({ min: 0, max: 10000 }),
-          currentGold: faker.number.int({ min: 0, max: 5000 }),
-          // Ensure the inventory field is compatible with the Prisma schema or remove it if not supported
-          // inventory: { connect: { id: inventory.id } },
-        },
-      });
-    }
   }
 
-  // Create 2 admin users
-  for (let i = 0; i < 2; i++) {
-    const admin = await prisma.users.create({
-      data: {
-        name: `admin_${faker.internet.userName()}`,
-        email: `admin_${faker.internet.email()}`,
-        password: faker.internet.password(),
-        role: 'ADMIN',
-      },
-    });
-
-    // Create leaderboard entry for admin (optional)
-    if (faker.datatype.boolean()) {
-      await prisma.leaderboard.create({
-        data: {
-          user_id: admin.id,
-          score: faker.number.int({ min: 0, max: 10000 }),
-        },
-      });
-    }
-  }
-
-  console.log('Seeding completed successfully!');
+  console.log('Database seeded successfully!');
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error('Error seeding database:', e);
     process.exit(1);
   })
   .finally(async () => {

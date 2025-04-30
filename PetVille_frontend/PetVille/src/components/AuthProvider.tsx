@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../Api';
+import { AxiosError } from 'axios';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -20,10 +21,9 @@ interface User {
   email: string;
   password: string;
   role: Role;
-  // These might be optional depending on your API response
-  Leaderboard?: any[]; // Replace 'any' with proper Leaderboard type if available
-  Save_files?: any[];  // Replace 'any' with proper Save_files type if available
-  createdAt?: Date;    // Assuming you want to show when user joined
+  Leaderboard?: any[];
+  Save_files?: any[];
+  createdAt?: Date;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -41,8 +41,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUserId(response.data.id);
       setIsAuthenticated(true);
       navigate('/user');
-    }catch (error) {
-      console.error('Hiba a bejelentkezés során:', error);
+    } catch (error) {
+      throw error;
     }
   };
 

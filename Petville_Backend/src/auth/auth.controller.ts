@@ -23,7 +23,8 @@ export class AuthController {
     description: 'Stores access_token and refresh_token in cookies',
   })
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
-    const { name, password } = loginDto;   
+    const { name, password } = loginDto;
+    console.log(loginDto)
     let payload;
     try {
       payload = await this.authService.login(loginDto);

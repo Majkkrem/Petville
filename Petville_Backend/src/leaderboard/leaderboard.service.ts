@@ -12,7 +12,20 @@ export class LeaderboardService {
   }
 
   findAll() {
-    return this.prisma.leaderboard.findMany();
+    return this.prisma.leaderboard.findMany({
+      include: {
+        save_file: {
+          select: {
+            petType: true,
+          },
+        },
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
   }
 
   findOne(id: number) {
