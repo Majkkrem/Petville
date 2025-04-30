@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -36,7 +37,7 @@ public class ScreenFactory {
   }
 
   public enum Lables {
-    ENERGY, HUNGER, HEALTH, MOOD
+    Energy, Hunger, Health, Mood
   }
 
   public Animal getAnimal() {
@@ -137,7 +138,7 @@ public class ScreenFactory {
     }
   }
 
-  
+
   public void setGameActive(boolean active) {
     this.gameActive = active;
     if (!active) {
@@ -365,6 +366,8 @@ public class ScreenFactory {
       statPanel.setOpaque(false);
       statPanel.setPreferredSize(new Dimension(150, 60));
 
+      System.out.println(labelType.toString());
+
       // Load icon using the new method
       ImageIcon icon = loadIconResource(labelType.toString(), 100, 100);
       JLabel iconLabel = new JLabel(icon);
@@ -395,48 +398,42 @@ public class ScreenFactory {
   }
 
   private ImageIcon loadIconResource(String iconName, int width, int height) {
-    // Try multiple possible paths and cases
-    String[] possiblePaths = {
-        "/icons/" + iconName.toLowerCase() + ".png",
-        "/icons/" + iconName.toUpperCase() + ".png",
-        "/icons/" + iconName + ".png",
-        "icons/" + iconName.toLowerCase() + ".png",
-        "icons/" + iconName.toUpperCase() + ".png",
-        "icons/" + iconName + ".png"
-    };
-
-    for (String path : possiblePaths) {
-      try (InputStream is = getClass().getResourceAsStream(path)) {
-        if (is != null) {
-          ImageIcon icon = new ImageIcon(ImageIO.read(is));
-          return new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
-        }
-      } catch (IOException e) {
-        System.err.println("Error loading icon from path: " + path);
-      }
+    String path = "/icons/" + iconName + ".png";
+    URL url = getClass().getResource(path);
+    if (url != null) {
+      ImageIcon originalIcon = new ImageIcon(url);
+      Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+      return new ImageIcon(scaledImage);
     }
 
-    // Fallback: create a colored circle icon
+    System.err.println("Icon not found: " + path + ". Using fallback icon.");
     return createFallbackIcon(iconName, width, height);
   }
-
   private ImageIcon createFallbackIcon(String iconName, int width, int height) {
     BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2d = img.createGraphics();
 
-    // Set color based on icon type
-    if (iconName.equalsIgnoreCase("energy")) {
-      g2d.setColor(new Color(100, 200, 100)); // Green
-    } else if (iconName.equalsIgnoreCase("hunger")) {
-      g2d.setColor(new Color(200, 150, 50)); // Orange
-    } else if (iconName.equalsIgnoreCase("health")) {
-      g2d.setColor(new Color(200, 50, 50)); // Red
-    } else if (iconName.equalsIgnoreCase("mood")) {
-      g2d.setColor(new Color(100, 100, 200)); // Blue
-    } else {
-      g2d.setColor(Color.GRAY); // Default
+
+    Color iconColor;
+    switch (iconName) {
+      case "energy":
+        iconColor = new Color(100, 200, 100); // Green
+        break;
+      case "hunger":
+        iconColor = new Color(200, 150, 50);  // Orange
+        break;
+      case "health":
+        iconColor = new Color(200, 50, 50);   // Red
+        break;
+      case "mood":
+        iconColor = new Color(100, 100, 200); // Blue
+        break;
+      default:
+        iconColor = Color.GRAY;
+        break;
     }
 
+    g2d.setColor(iconColor);
     g2d.fillOval(2, 2, width-4, height-4);
     g2d.dispose();
     return new ImageIcon(img);
@@ -445,20 +442,20 @@ public class ScreenFactory {
 
   private int getStatValue(Lables labelType) {
     switch (labelType) {
-      case ENERGY: return animal.getEnergy();
-      case HUNGER: return animal.getHunger();
-      case HEALTH: return animal.getHealth();
-      case MOOD: return animal.getMood();
+      case Energy: return animal.getEnergy();
+      case Hunger: return animal.getHunger();
+      case Health: return animal.getHealth();
+      case Mood: return animal.getMood();
       default: return 0;
     }
   }
 
   private Color getStatColor(Lables labelType) {
     switch (labelType) {
-      case ENERGY: return new Color(100, 200, 100);
-      case HUNGER: return new Color(200, 150, 50);
-      case HEALTH: return new Color(200, 50, 50);
-      case MOOD: return new Color(100, 100, 200);
+      case Energy: return new Color(100, 200, 100);
+      case Hunger: return new Color(200, 150, 50);
+      case Health: return new Color(200, 50, 50);
+      case Mood: return new Color(100, 100, 200);
       default: return Color.BLUE;
     }
   }
@@ -579,7 +576,7 @@ public class ScreenFactory {
       protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         try {
-          Image bgImage = ImageIO.read(getClass().getResource("icons/Shop.png"));
+          Image bgImage = ImageIO.read(getClass().getResource("/icons/Shop.png"));
           g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
         } catch (IOException e) {
           g.setColor(new Color(240, 240, 240, 200));
